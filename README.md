@@ -1,169 +1,305 @@
 # Docker Learning the Basics
+## A Practical Guide for Junior Data Engineers
 
-A comprehensive guide to understanding Docker fundamentals, containerization concepts, and practical Docker usage.
+---
 
-## 📚 Contents
+## 🎯 Welcome!
 
-### Core Concepts
-| File | Description |
-|------|-------------|
-| [Docker vs Virtual Machines.md](./Docker%20vs%20Virtual%20Machines.md) | Compare containers vs VMs, architecture differences, and Docker installation for macOS |
-| [Docker terminology.md](./Docker%20terminology.md) | Core concepts: Images, Containers, Registries, and Tags |
-| [Docker Compose Explained.md](./Docker%20Compose%20Explained.md) | Multi-container applications, YAML syntax, networks, volumes, and the Docker socket |
+This repository is your **step-by-step journey** to mastering Docker from zero. Whether you're a junior Data Engineer or just getting started with containers, you've come to the right place.
 
-### Examples
-| File | Description |
-|------|-------------|
-| [Examples/01_pulling_images_and_running_containers.md](./Examples/01_pulling_images_and_running_containers.md) | Essential CLI commands for images and containers |
-| [Examples/Portainer_Setup.md](./Examples/Portainer_Setup.md) | Web-based container management UI setup |
-| [Examples/Docker_Cheat_Sheet.md](./Examples/Docker_Cheat_Sheet.md) | Comprehensive command reference guide |
+### What You'll Learn
 
-## 🚀 Quick Start
+| Module | Topic | Time |
+|--------|-------|------|
+| 0 | Prerequisites & Setup | 15 min |
+| 1 | Docker Fundamentals | 30 min |
+| 2 | Your First Container | 20 min |
+| 3 | Managing Containers | 25 min |
+| 4 | Docker Compose | 30 min |
+| 5 | Portainer (GUI) | 15 min |
 
-### Run Your First Container
+**Total estimated time: ~2 hours**
 
-```bash
-# Pull and run a container
-docker run hello-world
+---
 
-# Run nginx web server
-docker run -d -p 8080:80 nginx:latest
+## 📚 Learning Path
 
-# Open browser to http://localhost:8080
+Follow this order - each module builds on the previous one:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                     YOUR LEARNING JOURNEY                         │
+│                                                                  │
+│  ┌─────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐     │
+│  │   0.    │───▶│   1.    │───▶│   2.    │───▶│   3.    │     │
+│  │ SETUP   │    │CONCEPTS │    │  FIRST  │    │MANAGING │     │
+│  │ ⭐      │    │  📖     │    │CONTAINER│    │   🔧   │     │
+│  └─────────┘    └─────────┘    └─────────┘    └─────────┘     │
+│                                                   │             │
+│                                                   ▼             │
+│  ┌─────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐     │
+│  │   6.    │◀───│   5.    │◀───│   4.    │◀───│ REFERENCE│    │
+│  │PORTTAINER│    │ COMPOSE │    │ NETWORKS│    │   📋    │     │
+│  │   🖥️   │    │   🚀    │    │ & VOLS │    │         │     │
+│  └─────────┘    └─────────┘    └─────────┘    └─────────┘     │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-### Essential Commands
+---
+
+## 📁 Repository Structure
+
+```
+Docker Learning the Basics/
+│
+├── README.md                    # 📍 You are here - Start here!
+│
+├── 0-prerequisites/            # Module 0: What you need
+│   └── README.md
+│
+├── 1-docker-concepts/          # Module 1: Theory
+│   ├── README.md
+│   ├── 01-virtualization-vs-containers.md
+│   ├── 02-images-containers.md
+│   └── 03-registries-tags.md
+│
+├── 2-setup/                    # Module 2: Installation
+│   ├── README.md
+│   └── docker-compose.yml      # Your first working compose file!
+│
+├── 3-hands-on/                 # Module 3+: Practice
+│   ├── 01-cli-essentials.md
+│   ├── 02-running-containers.md
+│   ├── 03-managing-containers.md
+│   ├── 04-networks-volumes.md
+│   ├── 05-docker-compose.md
+│   └── 06-portainer.md
+│
+├── 4-reference/                # Quick lookups
+│   ├── README.md
+│   ├── commands-cheatsheet.md
+│   └── docker-compose-template.yml
+│
+└── resources/                  # External links
+    └── README.md
+```
+
+---
+
+## 🚀 Quick Start (5 minutes)
+
+Already have Docker installed? Jump straight to action:
 
 ```bash
-# Check Docker version
-docker --version
+# 1. Run your first container
+docker run hello-world
 
-# List running containers
+# 2. Run a web server
+docker run -d -p 8080:80 nginx
+# Open: http://localhost:8080
+
+# 3. List running containers
 docker ps
 
-# List all containers
-docker ps -a
-
-# Stop a container
-docker stop <container_id>
-
-# Remove a container
-docker rm <container_id>
-
-# List images
-docker images
-
-# Pull an image
-docker pull nginx:latest
-```
-
-## 📖 What You'll Learn
-
-### 1. Docker vs Virtual Machines
-- Understanding the architecture differences
-- Resource utilization comparison
-- Security and isolation differences
-- When to use containers vs VMs
-- How to install Docker on macOS
-
-### 2. Docker Terminology
-- **Images**: Read-only templates for creating containers
-- **Containers**: Runnable instances of images
-- **Registries**: Storage and distribution for images
-- **Tags**: Version labels for images
-
-## 🛠️ Prerequisites
-
-| Requirement | Minimum | Recommended |
-|-------------|---------|-------------|
-| macOS Version | 11 (Big Sur) | 13 (Ventura) or later |
-| RAM | 4 GB | 8 GB |
-| Disk Space | 8 GB | 20 GB |
-| Processor | Intel or Apple Silicon | Apple Silicon (M1/M2/M3) |
-
-## 📦 Installation
-
-### macOS (Docker Desktop)
-
-```bash
-# Using Homebrew
-brew install --cask docker
-
-# Or download from:
-# https://www.docker.com/products/docker-desktop
-```
-
-### Verify Installation
-
-```bash
-docker --version
-docker run hello-world
+# 4. Stop it
+docker stop $(docker ps -q)
 ```
 
 ---
 
-## 🔗 Additional Resources
+## 📖 Module-by-Module Guide
 
-### Official Documentation
-- [Docker Documentation](https://docs.docker.com/) - Official Docker docs
-- [Docker Hub](https://hub.docker.com/) - Public image registry
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) - Desktop application
+### Module 0: Prerequisites
+**→ Start here if you haven't installed Docker**
 
-### Learning Platforms
-- [Docker Curriculum](https://docker-curriculum.com/) - Interactive Docker tutorial
-- [Play with Docker](https://labs.play-with-docker.com/) - Free online Docker playground
-- [Docker Labs](https://github.com/docker/labs) - Official Docker labs and workshops
+📄 [Go to Prerequisites](./0-prerequisites/README.md)
 
-### Community & Support
-- [Docker Community Forums](https://forums.docker.com/)
-- [r/docker](https://reddit.com/r/docker) - Docker subreddit
-- [Docker Slack](https://docker-community.slack.com/) - Community Slack channel
-
-### Tools & Utilities
-- [Docker Compose](https://docs.docker.com/compose/) - Multi-container applications
-- [Dockerfile Reference](https://docs.docker.com/engine/reference/builder/) - Dockerfile syntax
-- [Docker Scout](https://docs.docker.com/scout/) - Container analysis
-- [BuildKit](https://github.com/moby/buildkit) - Fast builds
-
-### Books
-- [Docker in Action](https://www.manning.com/books/docker-in-action) - Jeff Nickoloff
-- [The Docker Book](https://dockerbook.com/) - James Turnbull
-- [Container Security](https://nostarch.com/container-security) - Liz Rice
-
-### Video Tutorials
-- [Docker Official YouTube](https://www.youtube.com/@Docker)
-- [Techworld with Nana](https://www.youtube.com/c/TechWorldwithNana) - Docker tutorials
-
-### Related Technologies
-- [Kubernetes](https://kubernetes.io/) - Container orchestration
-- [Helm](https://helm.sh/) - Kubernetes package manager
-- [Docker Swarm](https://docs.docker.com/engine/swarm/) - Container orchestration
-- [Podman](https://podman.io/) - Docker alternative (daemonless)
-- [Kaniko](https://github.com/GoogleContainerTools/kaniko) - Container builds in Kubernetes
+Learn: System requirements, how to install Docker Desktop on macOS
 
 ---
 
-## 🆕 Extra Resources
+### Module 1: Core Concepts
+**→ Understand the "why" before the "how"**
 
-### Official Cheat Sheets
+📄 [Go to Docker Concepts](./1-docker-concepts/README.md)
+
+Learn:
+- What is containerization?
+- Docker vs Virtual Machines
+- Images, Containers, Registries, Tags
+- The Docker architecture
+
+---
+
+### Module 2: Setup
+**→ Get your environment ready**
+
+📄 [Go to Setup](./2-setup/README.md)
+
+Do:
+- Install Docker Desktop
+- Verify installation
+- Start Portainer (optional but recommended)
+
+---
+
+### Module 3: CLI Essentials
+**→ Your first Docker commands**
+
+📄 [Go to CLI Essentials](./3-hands-on/01-cli-essentials.md)
+
+Commands you'll learn:
+```bash
+docker --version    # Check Docker
+docker pull          # Download images
+docker run           # Create & start containers
+docker ps            # List containers
+docker stop          # Stop containers
+```
+
+---
+
+### Module 4: Running Containers
+**→ Advanced container management**
+
+📄 [Go to Running Containers](./3-hands-on/02-running-containers.md)
+
+Learn:
+- Interactive containers
+- Environment variables
+- Volume mounts
+- Port mapping
+- Container naming
+
+---
+
+### Module 5: Docker Compose
+**→ Multi-container applications made easy**
+
+📄 [Go to Docker Compose](./3-hands-on/05-docker-compose.md)
+
+Learn:
+- YAML syntax
+- Service definition
+- Networking between containers
+- Volumes
+- Real examples (Kafka, Spark, MongoDB)
+
+---
+
+### Module 6: Portainer
+**→ Manage containers with a GUI**
+
+📄 [Go to Portainer](./3-hands-on/06-portainer.md)
+
+Learn:
+- Install Portainer
+- Web interface overview
+- Container management via GUI
+
+---
+
+## 🔧 Common Commands Reference
+
+| Command | What it does |
+|---------|-------------|
+| `docker run hello-world` | Run test container |
+| `docker ps` | List running containers |
+| `docker ps -a` | List ALL containers |
+| `docker images` | List downloaded images |
+| `docker stop <name>` | Stop a container |
+| `docker rm <name>` | Remove a container |
+| `docker logs <name>` | View container logs |
+| `docker exec -it <name> bash` | Shell into container |
+
+See full reference: [Commands Cheatsheet](./4-reference/commands-cheatsheet.md)
+
+---
+
+## 💡 Tips for Success
+
+### 1. Type, Don't Copy-Paste
+You'll learn faster by typing commands. Copy-paste skips muscle memory.
+
+### 2. Break Things
+The best way to learn is to intentionally break things and fix them.
+
+### 3. Use Portainer Early
+Don't wait - install Portainer early. It helps visualize what you're doing with the CLI.
+
+### 4. Run the Examples
+Each module has hands-on exercises. **Do them** - not just read them.
+
+### 5. Ask Questions
+If something doesn't work:
+1. Check the troubleshooting section
+2. Run `docker logs <container>`
+3. Google the error message
+4. Check the resources section
+
+---
+
+## 🆘 Troubleshooting
+
+### "Cannot connect to Docker daemon"
+```bash
+# Docker Desktop isn't running
+open -a Docker
+```
+
+### "Port already in use"
+```bash
+# Find what's using the port
+lsof -i :8080
+# Then either stop that service or use a different port
+```
+
+### "Container exits immediately"
+```bash
+# Check logs
+docker logs <container_name>
+# Run interactively to debug
+docker run -it <image> /bin/sh
+```
+
+---
+
+## 📞 Resources
+
 | Resource | Description |
 |----------|-------------|
-| [Docker Official Cheat Sheet (PDF)](https://docs.docker.com/get-started/docker_cheatsheet.pdf) | Official Docker quick reference PDF |
-| [Collabnix Docker Cheat Sheet](https://dockerlabs.collabnix.com/docker/cheatsheet/) | Comprehensive community cheat sheet |
-| [Docker Compose Cheat Sheet](https://collabnix.com/docker-compose-cheatsheet/) | Docker Compose commands reference |
-| [Kubectl Cheat Sheet](https://collabnix.com/kubectl-cheatsheet/) | Kubernetes CLI reference |
+| [Docker Docs](https://docs.docker.com/) | Official documentation |
+| [Docker Hub](https://hub.docker.com/) | Image registry |
+| [Play with Docker](https://labs.play-with-docker.com/) | Free online playground |
+| [Docker Curriculum](https://docker-curriculum.com/) | Interactive tutorial |
 
-### Interactive Learning
-| Resource | Description |
-|----------|-------------|
-| [Play with Docker](https://labs.play-with-docker.com/) | Free online Docker playground |
-| [Play with Docker Classroom](https://training.play-with-docker.com/) | Official Docker training labs |
-| [Docker Curriculum](https://docker-curriculum.com/) | Step-by-step Docker tutorial |
+📄 [All Resources](./resources/README.md)
 
-### External Repositories & Guides
-| Resource | Description |
-|----------|-------------|
-| [Docker-Fundamentals](https://github.com/team-data-science/Docker-Fundamentals) | Docker fundamentals repository |
-| [Document Streaming Example](https://github.com/team-data-science/document-streaming/blob/main/docker-compose-kafka-spark-mongodb.yml) | Kafka/Spark/MongoDB docker-compose example |
-| [Docker Socket Explained](https://betterprogramming.pub/about-var-run-docker-sock-3bfd276e12fd) | Understanding /var/run/docker.sock |
-| [Docker Volumes Location (WSL)](https://stackoverflow.com/questions/61083772/where-are-docker-volumes-located-when-running-wsl-using-docker-desktop) | Volume storage on WSL/Docker Desktop |
+---
+
+## 👨‍🏫 About This Guide
+
+This repository was created by a **Senior Data Engineer** to train junior team members. The goal is simple:
+
+> **Get you from zero to productive with Docker in 2 hours.**
+
+Each module is designed to be:
+- ✅ **Short** - Focus on one concept at a time
+- ✅ **Practical** - Learn by doing
+- ✅ **Complete** - No skipping important details
+- ✅ **Repeatable** - Works on any machine
+
+---
+
+## 📝 License
+
+This is a learning resource. Feel free to use it, share it, and contribute!
+
+---
+
+**Last updated:** March 2026  
+**Maintainer:** Senior Data Engineering Team
+
+---
+
+*Remember: Every expert was once a beginner. Start now! 🚀*
