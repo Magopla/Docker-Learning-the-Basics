@@ -9,6 +9,7 @@ A comprehensive guide to understanding Docker fundamentals, containerization con
 |------|-------------|
 | [Docker vs Virtual Machines.md](./Docker%20vs%20Virtual%20Machines.md) | Compare containers vs VMs, architecture differences, and Docker installation for macOS |
 | [Docker terminology.md](./Docker%20terminology.md) | Core concepts: Images, Containers, Registries, and Tags |
+| [Docker Compose Explained.md](./Docker%20Compose%20Explained.md) | Multi-container applications, YAML syntax, networks, volumes, and the Docker socket |
 
 ### Examples
 | File | Description |
@@ -158,3 +159,11 @@ docker run hello-world
 | [Play with Docker](https://labs.play-with-docker.com/) | Free online Docker playground |
 | [Play with Docker Classroom](https://training.play-with-docker.com/) | Official Docker training labs |
 | [Docker Curriculum](https://docker-curriculum.com/) | Step-by-step Docker tutorial |
+
+### External Repositories & Guides
+| Resource | Description |
+|----------|-------------|
+| [Docker-Fundamentals](https://github.com/team-data-science/Docker-Fundamentals) | Docker fundamentals repository |
+| [Document Streaming Example](https://github.com/team-data-science/document-streaming/blob/main/docker-compose-kafka-spark-mongodb.yml) | Kafka/Spark/MongoDB docker-compose example |
+| [Docker Socket Explained](https://betterprogramming.pub/about-var-run-docker-sock-3bfd276e12fd) | Understanding /var/run/docker.sock |
+| [Docker Volumes Location (WSL)](https://stackoverflow.com/questions/61083772/where-are-docker-volumes-located-when-running-wsl-using-docker-desktop) | Volume storage on WSL/Docker Desktop |
