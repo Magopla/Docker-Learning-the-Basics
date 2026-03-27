@@ -5,7 +5,10 @@
 
 ## 🎯 Welcome!
 
+The repository has been created using Opencode to test the agent habilities to generate a guide as a "learning tutor".Use the repository as reference and how-to and not as a source of truth.
+
 This repository is your **step-by-step journey** to mastering Docker from zero. Whether you're a junior Data Engineer or just getting started with containers, you've come to the right place.
+
 
 ### What You'll Learn
 
@@ -295,11 +298,4 @@ Each module is designed to be:
 
 This is a learning resource. Feel free to use it, share it, and contribute!
 
----
 
-**Last updated:** March 2026  
-**Maintainer:** Senior Data Engineering Team
-
----
-
-*Remember: Every expert was once a beginner. Start now! 🚀*
