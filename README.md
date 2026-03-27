@@ -15,6 +15,7 @@ A comprehensive guide to understanding Docker fundamentals, containerization con
 |------|-------------|
 | [Examples/01_pulling_images_and_running_containers.md](./Examples/01_pulling_images_and_running_containers.md) | Essential CLI commands for images and containers |
 | [Examples/Portainer_Setup.md](./Examples/Portainer_Setup.md) | Web-based container management UI setup |
+| [Examples/Docker_Cheat_Sheet.md](./Examples/Docker_Cheat_Sheet.md) | Comprehensive command reference guide |
 
 ## 🚀 Quick Start
 
@@ -138,3 +139,22 @@ docker run hello-world
 - [Docker Swarm](https://docs.docker.com/engine/swarm/) - Container orchestration
 - [Podman](https://podman.io/) - Docker alternative (daemonless)
 - [Kaniko](https://github.com/GoogleContainerTools/kaniko) - Container builds in Kubernetes
+
+---
+
+## 🆕 Extra Resources
+
+### Official Cheat Sheets
+| Resource | Description |
+|----------|-------------|
+| [Docker Official Cheat Sheet (PDF)](https://docs.docker.com/get-started/docker_cheatsheet.pdf) | Official Docker quick reference PDF |
+| [Collabnix Docker Cheat Sheet](https://dockerlabs.collabnix.com/docker/cheatsheet/) | Comprehensive community cheat sheet |
+| [Docker Compose Cheat Sheet](https://collabnix.com/docker-compose-cheatsheet/) | Docker Compose commands reference |
+| [Kubectl Cheat Sheet](https://collabnix.com/kubectl-cheatsheet/) | Kubernetes CLI reference |
+
+### Interactive Learning
+| Resource | Description |
+|----------|-------------|
+| [Play with Docker](https://labs.play-with-docker.com/) | Free online Docker playground |
+| [Play with Docker Classroom](https://training.play-with-docker.com/) | Official Docker training labs |
+| [Docker Curriculum](https://docker-curriculum.com/) | Step-by-step Docker tutorial |
