@@ -346,48 +346,29 @@ docker run --rm \
 
 ## Part 5: Portainer Integration
 
-Portainer is a web-based container management UI that complements CLI operations.
+For a graphical web-based container management interface, see the dedicated guide:
 
-### Installing Portainer
+📄 **[Portainer Setup Guide](./Portainer_Setup.md)**
+
+This guide covers:
+- Installation methods (CLI, Docker Compose, Agent)
+- Initial setup wizard
+- Container, image, network, and volume management
+- Advanced configuration and troubleshooting
+
+Quick start:
 
 ```bash
-# Create volume for Portainer data
+# Install Portainer
 docker volume create portainer_data
-
-# Run Portainer container
-docker run -d \
-  -p 9000:9000 \
-  -p 8000:8000 \
-  --name portainer \
-  --restart=always \
+docker run -d --name portainer \
+  -p 9000:9000 -p 8000:8000 \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v portainer_data:/data \
   portainer/portainer-ce:latest
+
+# Access at: http://localhost:9000
 ```
-
-### Accessing Portainer
-
-| Service | URL |
-|---------|-----|
-| Portainer | http://localhost:9000 |
-
-### Initial Setup
-
-1. Open http://localhost:9000
-2. Create admin password
-3. Select "Docker" environment
-4. Click "Connect"
-
-### Portainer Features
-
-| Feature | Description |
-|---------|-------------|
-| Container Management | Start, stop, remove containers |
-| Image Management | Pull, build, remove images |
-| Log Viewer | Real-time container logs |
-| Console | Terminal access to containers |
-| Network Management | Create and manage networks |
-| Volume Management | Manage data volumes |
 
 ---
 
@@ -473,6 +454,6 @@ docker rm <name>
 |----------|-------------|
 | [Docker Official Docs](https://docs.docker.com/) | Complete Docker documentation |
 | [Docker CLI Reference](https://docs.docker.com/engine/reference/commandline/) | All Docker commands |
-| [Portainer Installation Guide](https://docs.portainer.io/v/ce-2.11/start/install/server/docker/wsl) | Portainer Docker installation |
+| [Portainer Setup Guide](./Portainer_Setup.md) | Web-based container management |
 | [Play with Docker](https://labs.play-with-docker.com/) | Free online Docker playground |
 | [Docker Hub](https://hub.docker.com/) | Public image registry |

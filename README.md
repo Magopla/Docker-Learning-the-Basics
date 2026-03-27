@@ -4,10 +4,17 @@ A comprehensive guide to understanding Docker fundamentals, containerization con
 
 ## 📚 Contents
 
+### Core Concepts
 | File | Description |
 |------|-------------|
 | [Docker vs Virtual Machines.md](./Docker%20vs%20Virtual%20Machines.md) | Compare containers vs VMs, architecture differences, and Docker installation for macOS |
 | [Docker terminology.md](./Docker%20terminology.md) | Core concepts: Images, Containers, Registries, and Tags |
+
+### Examples
+| File | Description |
+|------|-------------|
+| [Examples/01_pulling_images_and_running_containers.md](./Examples/01_pulling_images_and_running_containers.md) | Essential CLI commands for images and containers |
+| [Examples/Portainer_Setup.md](./Examples/Portainer_Setup.md) | Web-based container management UI setup |
 
 ## 🚀 Quick Start
 
