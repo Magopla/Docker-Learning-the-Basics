@@ -1,252 +1,137 @@
 # Module 0: Prerequisites
-## What You Need Before Starting
 
----
+This module helps you confirm that your machine is ready before you begin the actual Docker exercises.
 
-## 🎯 Goal
+## Learning Goal
 
-By the end of this module, you will have:
-- ✅ A running Docker installation
-- ✅ Verified that Docker works correctly
-- ✅ Understood the basic requirements
+Before continuing, you should be able to say:
 
----
+- Docker is installed
+- Docker Desktop or Docker Engine is running
+- `docker run hello-world` works
+- I know where to go if the daemon is not reachable
 
-## 📋 System Requirements
+## System Requirements
 
-### For macOS
+These are practical beginner-friendly targets, not strict rules for every setup.
 
-| Requirement | Minimum | Recommended |
-|-------------|---------|-------------|
-| macOS Version | 11 (Big Sur) | 13 (Ventura) or later |
-| RAM | 4 GB | 8 GB |
-| Disk Space | 8 GB free | 20 GB free |
-| Processor | Intel or Apple Silicon | Apple Silicon (M1/M2/M3) |
+### macOS
 
-### For Linux (Reference)
+| Item | Recommended |
+| --- | --- |
+| macOS | 13 or later |
+| RAM | 8 GB or more |
+| Free disk space | 15-20 GB |
+| CPU | Apple Silicon or Intel |
 
-| Requirement | Minimum | Recommended |
-|-------------|---------|-------------|
-| Ubuntu | 20.04 LTS | 22.04 LTS |
-| RAM | 2 GB | 4 GB |
-| Disk Space | 10 GB | 20 GB |
-| 64-bit architecture | ✅ Required | ✅ Required |
+### Linux
 
-### For Windows (Reference)
+| Item | Recommended |
+| --- | --- |
+| Ubuntu | 22.04 LTS or similar modern distro |
+| RAM | 4 GB or more |
+| Free disk space | 15-20 GB |
+| Architecture | 64-bit |
 
-| Requirement | Minimum | Recommended |
-|-------------|---------|-------------|
-| Windows | 10/11 Pro | 11 Pro |
-| WSL2 | Required | Required |
-| RAM | 4 GB | 8 GB |
-| Disk Space | 8 GB | 15 GB |
+### Windows
 
----
+| Item | Recommended |
+| --- | --- |
+| Windows | 11 with WSL2 |
+| RAM | 8 GB or more |
+| Free disk space | 15-20 GB |
+| Virtualization | Enabled |
 
-## 🖥️ Which Platform Are You Using?
+## Recommended Installation Path
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                      SELECT YOUR PLATFORM                         │
-│                                                                  │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐           │
-│  │   macOS     │  │   Linux     │  │   Windows   │           │
-│  │   🍎        │  │   🐧        │  │   🪟        │           │
-│  │             │  │             │  │             │           │
-│  │ Go to:      │  │ Go to:      │  │ Use WSL2    │           │
-│  │ Setup Guide │  │ Linux Docs  │  │ + Docker    │           │
-│  └─────────────┘  └─────────────┘  └─────────────┘           │
-└─────────────────────────────────────────────────────────────────┘
-```
+For beginners:
 
----
+- macOS: Docker Desktop
+- Windows: Docker Desktop with WSL2
+- Linux: Docker Engine or Docker Desktop, depending on preference
 
-## 📦 Installing Docker on macOS (Recommended)
+If you are on macOS, the easiest path is Docker Desktop:
 
-### Method 1: Docker Desktop (Easiest)
+1. Download it from [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+2. Install the correct build for your machine.
+3. Launch the app and wait until Docker reports it is running.
 
-**Step 1: Download Docker Desktop**
+## Verification Commands
 
-Visit: https://www.docker.com/products/docker-desktop/
-
-Click "Download for Mac" and choose:
-- **Apple Silicon (M1/M2/M3)**: `Docker-Desktop-*-aarch64.dmg`
-- **Intel Mac**: `Docker-Desktop-*-x86_64.dmg`
-
-**Step 2: Install**
-
-1. Double-click the `.dmg` file
-2. Drag Docker icon to Applications folder
-3. Launch Docker Desktop from Applications
-
-**Step 3: Wait for Setup**
-
-First launch takes 1-2 minutes. You'll see:
-```
-┌─────────────────────────────────────┐
-│  Docker Desktop is starting...       │
-│  ████████████████░░░░░ 80%          │
-└─────────────────────────────────────┘
-```
-
-**Step 4: Verify Installation**
-
-Open Terminal and run:
+Run these commands in a terminal:
 
 ```bash
 docker --version
-```
-
-Expected output:
-```
-Docker version 26.0.0, build xxxxxxx
-```
-
-### Method 2: Homebrew
-
-```bash
-# Install Docker Desktop via Homebrew
-brew install --cask docker
-
-# Launch Docker Desktop
-open -a Docker
-```
-
----
-
-## ✅ Verify Your Installation
-
-### Test 1: Docker Daemon
-
-```bash
-docker info 2>&1 | head -5
-```
-
-Expected output:
-```
-Client:
- Version:    26.0.0
- OS/Arch:    darwin/arm64
-```
-
-### Test 2: Run Hello World
-
-```bash
+docker compose version
+docker info | head -10
 docker run hello-world
+docker ps -a
 ```
 
-Expected output:
-```
-Hello from Docker!
-This message shows that your installation appears to be working correctly.
-```
+What success looks like:
 
-### Test 3: Check Docker Status
+- the version commands print installed versions
+- `docker info` shows client and server details
+- `hello-world` prints a success message
+- `docker ps -a` shows at least the completed `hello-world` container
+
+## Common Problems
+
+### Cannot connect to the Docker daemon
+
+Usually Docker is installed, but not running yet.
+
+On macOS:
 
 ```bash
-docker ps
-```
-
-Expected output:
-```
-CONTAINER ID   IMAGE   COMMAND   CREATED   STATUS   PORTS   NAMES
-```
-
-(Empty list is correct - no containers running)
-
----
-
-## 🐛 Troubleshooting Installation
-
-### Issue: "Cannot connect to Docker daemon"
-
-**Error:**
-```
-Cannot connect to the Docker daemon at unix:///Users/.../docker.sock
-```
-
-**Solution:**
-```bash
-# Docker Desktop isn't running
 open -a Docker
-
-# Wait 30 seconds, then verify
 docker ps
 ```
 
----
+### `docker compose` is missing
 
-### Issue: "Docker Desktop is not running"
-
-**Solution:**
-1. Open Applications folder
-2. Double-click Docker icon
-3. Wait for "Docker Desktop is running" in menu bar
-
----
-
-### Issue: Apple Silicon (M1/M2/M3) Warnings
-
-**Don't panic!** Apple Silicon Macs work great with Docker. You may see:
-- "Running on Apple Silicon" - ✅ Normal
-- Rosetta messages - ✅ Normal, for compatibility
-
----
-
-## 🚀 Next Steps
-
-Great! Docker is installed. Now let's continue:
-
-### Option A: Jump to Concepts
-Learn WHY Docker exists before using it.
-
-📄 [Go to Module 1: Docker Concepts](../1-docker-concepts/README.md)
-
-### Option B: Jump to Hands-On
-Skip theory and start running containers.
-
-📄 [Go to Module 3: CLI Essentials](../3-hands-on/01-cli-essentials.md)
-
----
-
-## 📝 Quick Reference
-
-### Docker Desktop Locations
-
-| Item | Location |
-|------|----------|
-| Docker Desktop App | `/Applications/Docker.app` |
-| Settings | Menu bar → Docker icon → Settings |
-| Data | `~/Library/Containers/com.docker.docker` |
-
-### Useful Commands
+Your installation may be incomplete or outdated. Reinstall Docker Desktop or update Docker Engine and verify again with:
 
 ```bash
-docker --version              # Check version
-docker info                   # System info
-open -a Docker               # Open Docker Desktop
+docker compose version
 ```
 
----
+### Port conflict errors later in the course
 
-## ✅ Module 0 Checklist
+This is common and not a sign that Docker is broken. It usually means another process is already using the host port you picked.
 
-Before moving on, confirm you can do this:
+Example:
 
-- [ ] `docker --version` shows a version number
+```bash
+docker run -d -p 8081:80 nginx:alpine
+```
+
+## Checklist
+
+- [ ] `docker --version` works
+- [ ] `docker compose version` works
 - [ ] `docker run hello-world` works
-- [ ] `docker ps` shows an empty list
+- [ ] `docker ps -a` shows the container history
 
----
+## Mini Quiz
 
-## 👨‍🏫 Tip from Your Mentor
+1. What does `docker info` tell you that `docker --version` does not?
+2. If the CLI exists but cannot reach the daemon, what is the most likely issue?
+3. Why is `hello-world` a good first test?
 
-> **"Don't skip the setup!"**
-> 
-> I know you're excited to start running containers. But spending 5 extra minutes to ensure Docker is correctly installed will save you hours of frustration later.
->
-> If `hello-world` doesn't work, Google the exact error message. Someone else has had your problem and posted a solution.
+## Module Exercise
 
----
+Before moving on, try this without checking earlier sections:
 
-**Next: [Module 1: Docker Concepts](../1-docker-concepts/README.md)**
+```bash
+docker run -d --name prereq-nginx -p 8080:80 nginx:alpine
+docker ps
+docker stop prereq-nginx
+docker rm prereq-nginx
+```
+
+If that works, your machine is ready for the rest of the course.
+
+## Next Step
+
+Continue to [`../1-docker-concepts/README.md`](../1-docker-concepts/README.md).

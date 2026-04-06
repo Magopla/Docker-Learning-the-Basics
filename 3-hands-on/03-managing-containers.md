@@ -1,195 +1,118 @@
 # Exercise 3: Managing Containers
-## Container Lifecycle & Inspection
 
----
+This exercise is about inspection and control: once a container exists, how do you understand what it is doing?
 
-## 🎯 Goal
+## Learning Goal
 
-Learn to:
-- Start, stop, restart containers
-- Execute commands in running containers
-- Inspect container details
-- View and follow logs
-- Copy files to/from containers
+By the end of this exercise, you should be able to:
 
-**Time: ~20 minutes**
+- start, stop, and restart a container
+- run commands inside a running container
+- inspect metadata
+- read logs
+- copy files in and out of a container
 
----
-
-## 1️⃣ Container Lifecycle
+## Step 1: Create A Working Container
 
 ```bash
-# Create container (don't start)
 docker create --name my-app nginx:alpine
-
-# Start container
 docker start my-app
+docker ps
+```
 
-# Stop container
+This separation is useful:
+
+- `docker create` makes the container
+- `docker start` starts an existing container
+- `docker run` is a shortcut that does both
+
+## Step 2: Control The Lifecycle
+
+```bash
 docker stop my-app
-
-# Restart container
+docker start my-app
 docker restart my-app
-
-# Or use run (create + start)
-docker run -d --name my-app nginx:alpine
+docker pause my-app
+docker unpause my-app
 ```
 
-### Pause/Unpause
+These commands help you understand that a container is an object with a lifecycle, not just a single one-shot command.
+
+## Step 3: Run Commands Inside The Container
 
 ```bash
-docker pause my-app    # Freeze container
-docker unpause my-app  # Resume container
-```
-
----
-
-## 2️⃣ Execute Commands
-
-Run commands inside a running container:
-
-```bash
-# Run single command
 docker exec my-app ls /usr/share/nginx/html
-
-# Run with output
 docker exec my-app cat /etc/alpine-release
-
-# Interactive shell
 docker exec -it my-app sh
 ```
 
-### Practical Examples
+`docker exec` is one of the most useful debugging tools in Docker.
+
+Inside the shell, try:
 
 ```bash
-# Check nginx config
-docker exec my-app cat /etc/nginx/nginx.conf
-
-# List running processes
-docker exec my-app ps aux
-
-# Check environment
-docker exec my-app env
-
-# Exit shell
+ps
+env
 exit
 ```
 
----
-
-## 3️⃣ Inspect Containers
-
-Get detailed information about a container:
+## Step 4: Inspect Metadata
 
 ```bash
-# Full inspection
 docker inspect my-app
-
-# Get specific fields (JSON)
-docker inspect --format '{{.NetworkSettings.IPAddress}}' my-app
 docker inspect --format '{{.Config.Image}}' my-app
 docker inspect --format '{{.State.Status}}' my-app
+docker inspect --format '{{json .NetworkSettings.Ports}}' my-app
 ```
 
-### Useful Format Options
+Use `inspect` when you want facts instead of guesses.
 
-| Field | Command |
-|-------|---------|
-| IP Address | `{{.NetworkSettings.IPAddress}}` |
-| Image | `{{.Config.Image}}` |
-| Status | `{{.State.Status}}` |
-| Ports | `{{.NetworkSettings.Ports}}` |
-
----
-
-## 4️⃣ View Logs
+## Step 5: Read Logs
 
 ```bash
-# View logs
 docker logs my-app
-
-# Follow logs (real-time)
-docker logs -f my-app
-
-# Last 20 lines
 docker logs --tail 20 my-app
-
-# Logs since timestamp
-docker logs --since "2024-01-01" my-app
+docker logs -f my-app
 ```
 
----
+Logs are usually the first thing to check when a container exits or behaves unexpectedly.
 
-## 5️⃣ Copy Files
+## Step 6: Copy Files
 
 ```bash
-# Copy FROM container TO host
 docker cp my-app:/etc/nginx/nginx.conf ./nginx.conf
-
-# Copy FROM host TO container
-echo "test" > test.txt
-docker cp test.txt my-app:/tmp/test.txt
-
-# Verify
-docker exec my-app cat /tmp/test.txt
+docker cp ./nginx.conf my-app:/tmp/nginx.conf
+docker exec my-app ls /tmp
 ```
 
----
+This is useful when you want to inspect configuration or move a quick test file in or out.
 
-## 6️⃣ Resource Stats
+## Step 7: View Runtime Stats
 
 ```bash
-# Live stats for all containers
-docker stats
-
-# Stats for specific container
-docker stats my-app
-
-# One-time stats
 docker stats --no-stream my-app
 ```
 
----
+This gives you a quick snapshot of resource usage.
 
-## 🧪 Challenge
+## Challenge
 
-Debug a container step by step:
+Do this workflow end to end:
 
-1. Run a container
-2. Execute `ps aux` inside it
-3. Copy its config file to your host
-4. View its logs
-5. Stop and clean up
+1. Start an Nginx container named `debug-test`.
+2. Read its logs.
+3. Open a shell inside it.
+4. Copy `/etc/nginx/nginx.conf` to your host.
+5. Stop and remove the container.
 
-```bash
-# 1. Run
-docker run -d --name debug-test nginx:alpine
+## Checklist
 
-# 2. Execute
-docker exec debug-test ps aux
+- [ ] I can explain `create` vs `run`
+- [ ] I can use `docker exec`
+- [ ] I can use `docker inspect`
+- [ ] I know logs are the first place to check for many failures
+- [ ] I can copy a file out of a container
 
-# 3. Copy
-docker cp debug-test:/etc/nginx/nginx.conf ./debug-nginx.conf
+## Next Step
 
-# 4. View logs
-docker logs debug-test
-
-# 5. Clean up
-docker stop debug-test && docker rm debug-test
-```
-
----
-
-## ✅ Checklist
-
-- [ ] Start/stop/restart containers
-- [ ] Execute commands with `docker exec`
-- [ ] Inspect container details
-- [ ] View container logs
-- [ ] Copy files to/from containers
-
----
-
-## 🚀 Next Steps
-
-**Go to Exercise 4:** [Networks & Volumes](./04-networks-volumes.md)
+Continue to [`04-networks-volumes.md`](./04-networks-volumes.md).

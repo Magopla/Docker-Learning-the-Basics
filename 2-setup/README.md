@@ -1,307 +1,120 @@
 # Module 2: Setup
-## Install Docker & Start Your First Container
 
----
+This module is about one thing: making sure Docker works reliably on your machine before you move into the exercises.
 
-## 🎯 Goal
+## Learning Goal
 
-By the end of this module, you will have:
-- ✅ Docker Desktop installed and running
-- ✅ Portainer installed (optional but recommended)
-- ✅ Verified that everything works
+By the end of this module, you should be able to answer "yes" to all of these:
 
----
+- Docker is installed
+- the Docker daemon is running
+- `docker` and `docker compose` both work
+- I can start and stop a simple container
 
-## 📋 Prerequisites
+Portainer is optional and comes last.
 
-Before starting, check your system:
+## Step 1: Install Docker Desktop
 
-```bash
-# Check macOS version (should be 11+)
-sw_vers
+On macOS, the easiest route is Docker Desktop:
 
-# Check chip (Intel or Apple Silicon)
-uname -m
-# arm64 = Apple Silicon
-# x86_64 = Intel
-```
+1. Download it from [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+2. Choose the correct build for your machine:
+   - Apple Silicon: `aarch64`
+   - Intel: `x86_64`
+3. Move Docker to `Applications`.
+4. Launch Docker Desktop and wait until it reports that Docker is running.
 
----
+## Step 2: Verify The Installation
 
-## 🐳 Step 1: Install Docker Desktop
-
-### Download Docker Desktop
-
-1. Go to: https://www.docker.com/products/docker-desktop/
-2. Click **"Download for Mac"**
-3. Choose the correct version:
-   - **Apple Silicon (M1/M2/M3)**: `Docker-Desktop-*-aarch64.dmg`
-   - **Intel**: `Docker-Desktop-*-x86_64.dmg`
-
-### Install
-
-1. Double-click the `.dmg` file
-2. Drag Docker to Applications
-3. Launch Docker Desktop
-
-**First launch takes 1-2 minutes.** You'll see a whale icon in the menu bar when ready.
-
----
-
-## ✅ Step 2: Verify Installation
-
-Open Terminal and run:
+Run these commands:
 
 ```bash
-# 1. Check Docker version
 docker --version
-
-# 2. Check Docker Compose version
 docker compose version
-
-# 3. Run a test container
+docker info | head -10
 docker run hello-world
-
-# 4. List containers (should be empty)
 docker ps -a
 ```
 
-Expected output for `docker run hello-world`:
-```
-Hello from Docker!
-This message shows that your installation appears to be working correctly.
-```
+What you are checking:
 
----
+- `docker --version`: the CLI is installed
+- `docker compose version`: Compose support is available
+- `docker info`: the daemon is reachable
+- `docker run hello-world`: Docker can pull and run a container
+- `docker ps -a`: you can inspect container history
 
-## 🖥️ Step 3: Install Portainer (Recommended)
+## Step 3: Run A Real Container
 
-Portainer gives you a **web-based GUI** to manage containers. Highly recommended for beginners!
-
-### Quick Install
+Start a small web server:
 
 ```bash
-# Create a volume for Portainer data
-docker volume create portainer_data
-
-# Run Portainer
-docker run -d \
-  --name portainer \
-  --restart unless-stopped \
-  -p 9000:9000 \
-  -p 9443:9443 \
-  -p 8000:8000 \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  -v portainer_data:/data \
-  portainer/portainer-ce:latest
-```
-
-Or use our **pre-configured docker-compose.yml**:
-
-```bash
-# From the setup folder
-cd setup
-docker compose up -d
-```
-
-### Access Portainer
-
-| URL | Description |
-|-----|-------------|
-| http://localhost:9000 | HTTP (non-secure) |
-| https://localhost:9443 | HTTPS (secure) |
-
-### Portainer Setup Wizard
-
-1. Open http://localhost:9000
-2. Create admin password (min 8 characters)
-3. Click "Create User"
-4. Select "Docker" environment
-5. Click "Connect"
-
-**Congratulations!** You now have a visual Docker management interface.
-
----
-
-## 🧪 Step 4: Test Your Setup
-
-### Test 1: Run a Web Server
-
-```bash
-# Run nginx web server
 docker run -d --name my-nginx -p 8080:80 nginx:alpine
-
-# Check it's running
 docker ps
-
-# Open in browser
+docker logs my-nginx
 open http://localhost:8080
-
-# Stop it
 docker stop my-nginx
-
-# Clean up
 docker rm my-nginx
 ```
 
-### Test 2: Run a Database
+If that worked, your setup is good enough for the rest of the repository.
+
+## Optional: Install Portainer
+
+Portainer gives you a GUI for seeing containers, images, networks, and volumes. It is useful for beginners, but not required.
+
+You can start it with the compose file already included in this folder:
 
 ```bash
-# Run PostgreSQL
-docker run -d \
-  --name my-postgres \
-  -e POSTGRES_PASSWORD=secret \
-  -p 5432:5432 \
-  postgres:16-alpine
-
-# Check logs
-docker logs my-postgres
-
-# Connect (optional)
-docker exec -it my-postgres psql -U postgres
-
-# Clean up
-docker stop my-postgres && docker rm my-postgres
+cd 2-setup
+docker compose up -d
+docker compose ps
 ```
 
-### Test 3: Run Redis Cache
+Open one of these:
+
+- `http://localhost:9000`
+- `https://localhost:9443`
+
+When you are done:
 
 ```bash
-# Run Redis
-docker run -d \
-  --name my-redis \
-  -p 6379:6379 \
-  redis:7-alpine
-
-# Test connection
-docker exec -it my-redis redis-cli ping
-# Should return: PONG
-
-# Clean up
-docker stop my-redis && docker rm my-redis
+docker compose down
 ```
 
----
+## Common Problems
 
-## 🔧 Useful Commands
+### "Cannot connect to the Docker daemon"
 
-### Check Docker Status
-
-```bash
-docker info                    # Full system info
-docker version               # Version info
-docker ps                    # Running containers
-docker ps -a                 # All containers
-```
-
-### Clean Up
+Docker Desktop is probably not running yet. Open it and wait for it to finish starting:
 
 ```bash
-# Remove all stopped containers
-docker container prune
-
-# Remove all unused images
-docker image prune -a
-
-# Remove all unused data
-docker system prune -a
-```
-
-### View Logs
-
-```bash
-docker logs portainer         # View logs
-docker logs -f portainer      # Follow logs
-docker logs --tail 50 portainer  # Last 50 lines
-```
-
----
-
-## 🐛 Troubleshooting
-
-### "Cannot connect to Docker daemon"
-
-```bash
-# Docker Desktop isn't running
 open -a Docker
-
-# Wait 30 seconds, then try again
 docker ps
 ```
 
-### "Port already in use"
+### `docker compose` is not available
+
+You may have an incomplete or older Docker installation. Reinstall Docker Desktop and verify again with:
 
 ```bash
-# Find what's using the port
-lsof -i :8080
-
-# Stop that service or use a different port
+docker compose version
 ```
 
-### "Container exits immediately"
+### Port `8080` is already in use
+
+Use a different host port:
 
 ```bash
-# Check logs
-docker logs <container_name>
-
-# Run interactively to debug
-docker run -it nginx:alpine /bin/sh
+docker run -d --name my-nginx -p 8081:80 nginx:alpine
 ```
 
----
+## Ready To Continue?
 
-## ✅ Setup Checklist
+If the verification steps worked, continue to [`../3-hands-on/README.md`](../3-hands-on/README.md).
 
-Before moving on, confirm:
+## Mini Quiz
 
-- [ ] `docker --version` works
-- [ ] `docker run hello-world` works
-- [ ] Portainer is accessible at http://localhost:9000
-- [ ] You can start and stop containers
-
----
-
-## 🚀 Next Steps
-
-**You're ready to start hands-on learning!**
-
-Go to: [Module 3: CLI Essentials](../3-hands-on/01-cli-essentials.md)
-
-Or if you prefer learning by doing, skip to:
-- [Running Containers](../3-hands-on/02-running-containers.md)
-- [Docker Compose](../3-hands-on/05-docker-compose.md)
-
----
-
-## 📁 Files in This Folder
-
-```
-setup/
-├── README.md                 # ← You are here
-└── docker-compose.yml        # Portainer setup file
-```
-
-### The docker-compose.yml
-
-This file sets up Portainer with a single command:
-
-```bash
-docker compose up -d
-```
-
----
-
-## 👨‍🏫 Tip from Your Mentor
-
-> **"Master the basics first."**
->
-> Before diving into complex setups, make sure you can:
-> 1. Start/stop containers
-> 2. View logs
-> 3. Clean up
->
-> These basics will save you hours of debugging later.
-
----
-
-**Next: [Module 3: CLI Essentials](../3-hands-on/01-cli-essentials.md)**
+1. What is the difference between the Docker CLI being installed and the Docker daemon running?
+2. Why do we test with both `docker info` and `docker run hello-world`?
+3. If port `8080` is busy, what part of `-p 8080:80` should you change?

@@ -1,167 +1,95 @@
 # Exercise 6: Portainer
-## Visual Container Management
 
----
+Portainer is optional in this repository, but it can be very helpful when you are new to Docker and want a visual view of what the CLI is doing.
 
-## 🎯 Goal
+## Learning Goal
 
-Learn to:
-- Access and use Portainer web interface
-- Manage containers visually
-- View logs and inspect containers
-- Manage images and volumes
+By the end of this exercise, you should be able to:
 
-**Time: ~15 minutes**
+- open Portainer
+- inspect containers, images, networks, and volumes
+- read logs and open a console
+- understand Portainer as a companion to the CLI, not a replacement for it
 
----
+## Step 1: Start Portainer
 
-## 1️⃣ What is Portainer?
-
-Portainer is a **web-based GUI** for managing Docker containers.
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    PORTAINER INTERFACE                           │
-│                                                                  │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │  🐳 Portainer                    [Admin ▼]              │   │
-│  ├─────────────────────────────────────────────────────────┤   │
-│  │                                                         │   │
-│  │  Dashboard                                              │   │
-│  │  ┌────────────┐ ┌────────────┐ ┌────────────┐          │   │
-│  │  │Containers │ │   Images   │ │  Volumes   │          │   │
-│  │  │     5     │ │     12    │ │     3     │          │   │
-│  │  └────────────┘ └────────────┘ └────────────┘          │   │
-│  │                                                         │   │
-│  │  Quick Actions                                          │   │
-│  │  ┌─────────────────────────────────────────────────┐  │   │
-│  │  │ [+ Create Container]  [Pull Image]  [Networks] │  │   │
-│  │  └─────────────────────────────────────────────────┘  │   │
-│  │                                                         │   │
-│  └─────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## 2️⃣ Access Portainer
-
-If you haven't installed Portainer yet:
+From the repository root:
 
 ```bash
-# From the setup folder
 cd 2-setup
 docker compose up -d
+docker compose ps
 ```
 
-**Open your browser:**
-- http://localhost:9000 (HTTP)
-- https://localhost:9443 (HTTPS)
+Then open:
 
-**First-time setup:**
-1. Create admin password
-2. Click "Create User"
-3. Select "Docker" environment
-4. Click "Connect"
+- `http://localhost:9000`
+- or `https://localhost:9443`
 
----
+On first launch:
 
-## 3️⃣ Dashboard Overview
+1. Create an admin password.
+2. Choose the local Docker environment.
+3. Finish the setup wizard.
 
-The dashboard shows:
-- **Containers**: Running/Stopped count
-- **Images**: Downloaded images
-- **Volumes**: Persistent storage
-- **Networks**: Docker networks
+## Step 2: Explore The Dashboard
 
----
+Look for these sections:
 
-## 4️⃣ Manage Containers
+- containers
+- images
+- networks
+- volumes
 
-### View Containers
-1. Click **"Containers"** in the sidebar
-2. See all containers with status
+As you click around, compare what you see in Portainer with what you already know from:
 
-### Start/Stop Container
-1. Click the container name
-2. Click **"Stop"** or **"Start"** button
+- `docker ps`
+- `docker images`
+- `docker network ls`
+- `docker volume ls`
 
-### Create New Container
-1. Click **"+ Add container"**
-2. Fill in:
-   - Name: `test-container`
-   - Image: `nginx:alpine`
-   - Port mapping: `8080:80`
-3. Click **"Deploy the container"**
+## Step 3: Inspect A Container
 
-### View Logs
-1. Click container name
-2. Select **"Logs"** tab
-3. Toggle **"Stream"** for real-time logs
+If you still have any practice containers running, open one in Portainer and review:
 
-### Access Console
-1. Click container name
-2. Select **"Console"** tab
-3. Choose shell (bash/sh)
-4. Click **"Connect"**
+- its status
+- mapped ports
+- logs
+- environment variables
+- mounted volumes
 
----
+If not, create a simple one from the CLI first:
 
-## 5️⃣ Manage Images
+```bash
+docker run -d --name portainer-demo -p 8080:80 nginx:alpine
+```
 
-1. Click **"Images"** in sidebar
-2. View all downloaded images
-3. **Pull image**: Click **"Pull image"**, enter name
-4. **Remove image**: Click the trash icon
+Then refresh Portainer and inspect that container there.
 
----
+## Step 4: Try A Few GUI Actions
 
-## 6️⃣ Manage Volumes
+In Portainer, practice:
 
-1. Click **"Volumes"** in sidebar
-2. See all volumes with size
-3. **Create volume**: Click **"+ Add volume"**
-4. **Remove volume**: Click the trash icon
+1. viewing container logs
+2. opening the console
+3. stopping and starting a container
+4. removing a container you no longer need
 
----
+This is useful because it reinforces the same Docker concepts from a different angle.
 
-## 7️⃣ Quick Actions
+## Important Security Note
 
-| Action | Where | How |
-|--------|-------|-----|
-| Start container | Containers | Click play button |
-| Stop container | Containers | Click stop button |
-| View logs | Container detail | Logs tab |
-| Shell access | Container detail | Console tab |
-| Inspect JSON | Container detail | Inspect tab |
-| Remove container | Container detail | Actions → Delete |
+Portainer usually works by mounting the Docker socket into the Portainer container. That gives it powerful access to your Docker environment.
 
----
+That is fine for local learning, but it is something to treat carefully in shared or production environments.
 
-## 🧪 Try This in Portainer
+## Checklist
 
-1. **Pull an image**: `redis:7-alpine`
-2. **Create container**: `my-redis` with port `6379:6379`
-3. **View logs**: See Redis startup
-4. **Access console**: Run `redis-cli ping`
-5. **Stop & remove**: Clean up
+- [ ] I can open Portainer locally
+- [ ] I can find containers, images, networks, and volumes
+- [ ] I can inspect logs and runtime details from the UI
+- [ ] I understand that Portainer is using Docker underneath, not replacing it
 
----
+## Next Step
 
-## ✅ Checklist
-
-- [ ] Access Portainer at http://localhost:9000
-- [ ] View containers list
-- [ ] Create a new container via GUI
-- [ ] View container logs
-- [ ] Access container console
-- [ ] Pull an image
-- [ ] Stop and remove a container
-
----
-
-## 🚀 Next Steps
-
-**Congratulations! You've completed all exercises!**
-
-Go to: [Commands Cheatsheet](../4-reference/commands-cheatsheet.md) for a quick reference.
+Use [`../4-reference/commands-cheatsheet.md`](../4-reference/commands-cheatsheet.md) as your quick reference while repeating the exercises.

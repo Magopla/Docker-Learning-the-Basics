@@ -1,289 +1,161 @@
 # Exercise 5: Docker Compose
-## Multi-Container Applications Made Easy
 
----
+This exercise introduces Docker Compose as the tool for running related services together from one YAML file.
 
-## 🎯 Goal
+## Learning Goal
 
-Learn to:
-- Write Docker Compose YAML files
-- Define services, networks, and volumes
-- Run multi-container applications
-- Scale services
+By the end of this exercise, you should be able to:
 
-**Time: ~40 minutes**
+- read and write a small Compose file
+- understand `services`, `ports`, `volumes`, and `environment`
+- start and stop a multi-container stack
+- use an `.env` file to keep configuration out of the Compose file
 
----
+## Why Compose Matters
 
-## 1️⃣ What is Docker Compose?
+Running one container with `docker run` is a great first step.
 
-Docker Compose lets you define **multi-container applications** in a single YAML file.
+But real projects usually need more than one service, for example:
 
-```yaml
-# docker-compose.yml
-version: "3.8"
+- an app
+- a database
+- a cache
+- an admin UI
 
-services:
-  web:
-    image: nginx:alpine
-    ports:
-      - "8080:80"
-  
-  api:
-    image: node:20
-    ports:
-      - "3000:3000"
-```
-
-Then run everything with one command:
-
-```bash
-docker compose up -d      # Start all services
-docker compose down         # Stop all services
-```
-
----
-
-## 2️⃣ Your First docker-compose.yml
-
-Create a file named `docker-compose.yml`:
-
-```yaml
-version: "3.8"
-
-services:
-  web:
-    image: nginx:alpine
-    ports:
-      - "8080:80"
-    volumes:
-      - ./html:/usr/share/nginx/html:ro
-```
-
-Create the HTML folder:
-
-```bash
-mkdir -p html
-echo "<h1>Hello from Docker Compose!</h1>" > html/index.html
-```
-
-Run it:
+Compose lets you describe that setup once and run it with:
 
 ```bash
 docker compose up -d
-
-# Check
-docker compose ps
-
-# Visit http://localhost:8080
-open http://localhost:8080
-
-# Stop
 docker compose down
 ```
 
----
+## Lab For This Exercise
 
-## 3️⃣ Services with Environment Variables
+This repository includes a small lab:
 
-```yaml
-version: "3.8"
-
-services:
-  db:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_DB: mydb
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: secret
-    volumes:
-      - db-data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-
-  adminer:
-    image: adminer
-    ports:
-      - "8080:8080"
-    depends_on:
-      - db
-
-volumes:
-  db-data:
+```text
+3-hands-on/labs/05-compose-postgres-adminer/
+├── .env.example
+└── compose.yml
 ```
+
+It starts:
+
+- PostgreSQL
+- Adminer, a lightweight database UI
+
+## Step 1: Inspect The Compose File
+
+Open [`labs/05-compose-postgres-adminer/compose.yml`](./labs/05-compose-postgres-adminer/compose.yml) and identify:
+
+- the two services
+- which ports are exposed
+- which environment variables are used
+- which named volume stores database data
+
+The important idea is that both services are declared in one file and share the same default network created by Compose.
+
+## Step 2: Prepare The Environment File
+
+Copy the example file:
+
+```bash
+cd 3-hands-on/labs/05-compose-postgres-adminer
+cp .env.example .env
+```
+
+Then review the values:
+
+```bash
+cat .env
+```
+
+## Step 3: Validate The Configuration
+
+Before starting the stack, ask Compose to render the final config:
+
+```bash
+docker compose -f compose.yml config
+```
+
+This is a useful habit. It catches syntax issues and shows you the fully resolved configuration.
+
+## Step 4: Start The Stack
+
+```bash
+docker compose -f compose.yml up -d
+docker compose -f compose.yml ps
+```
+
+Then open:
+
+- `http://localhost:8080`
+
+Use these values in Adminer:
+
+- System: `PostgreSQL`
+- Server: `db`
+- Username: value from `.env`
+- Password: value from `.env`
+- Database: value from `.env`
+
+## Step 5: Inspect What Compose Created
 
 Run:
 
 ```bash
-docker compose up -d
-
-# Access Adminer at http://localhost:8080
-# Server: db
-# Username: user
-# Password: secret
-# Database: mydb
-
-# Clean up
-docker compose down -v
+docker compose -f compose.yml logs db
+docker compose -f compose.yml logs adminer
+docker volume ls
+docker network ls
 ```
 
----
+Things to notice:
 
-## 4️⃣ Real-World Example: Node.js + PostgreSQL
+- Compose created containers for both services
+- Compose created a project-scoped network
+- Compose created a named volume for PostgreSQL data
+- the Adminer container connects to PostgreSQL using the service name `db`
 
-Create `docker-compose.yml`:
-
-```yaml
-version: "3.8"
-
-services:
-  api:
-    build: .
-    ports:
-      - "3000:3000"
-    environment:
-      - DATABASE_URL=postgres://user:secret@db:5432/mydb
-    depends_on:
-      db:
-        condition: service_healthy
-    volumes:
-      - ./src:/app/src
-
-  db:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_DB: mydb
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: secret
-    volumes:
-      - db-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
-volumes:
-  db-data:
-```
-
-### Commands
+## Step 6: Stop The Stack
 
 ```bash
-# Start all services
-docker compose up -d
-
-# View logs
-docker compose logs -f api
-
-# Execute command in service
-docker compose exec api node --version
-
-# Scale service
-docker compose up -d --scale api=3
-
-# Stop all
-docker compose down -v
+docker compose -f compose.yml down
 ```
 
----
+The containers and network are removed, but the named volume remains.
 
-## 5️⃣ Common Commands
+To remove the volume too:
 
-| Command | What it does |
-|---------|-------------|
-| `docker compose up -d` | Start all services (background) |
-| `docker compose up --build` | Build images before starting |
-| `docker compose down` | Stop and remove containers |
-| `docker compose down -v` | Also remove volumes |
-| `docker compose ps` | List services |
-| `docker compose logs -f` | Follow logs |
-| `docker compose exec <service> <cmd>` | Run command in service |
-| `docker compose restart <service>` | Restart a service |
-| `docker compose stop` | Stop services (keep containers) |
-| `docker compose config` | Validate compose file |
-
----
-
-## 6️⃣ Environment Variables in Compose
-
-### .env file
-
-Create `.env`:
-
-```
-POSTGRES_DB=mydb
-POSTGRES_USER=user
-POSTGRES_PASSWORD=secret123
+```bash
+docker compose -f compose.yml down -v
 ```
 
-Reference in `docker-compose.yml`:
+## What To Learn From This Exercise
 
-```yaml
-services:
-  db:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-```
+Compose teaches a few core Docker ideas at once:
 
----
+- service names become stable hostnames on the Compose network
+- volumes exist outside a single container lifecycle
+- environment variables make configuration easier to change
+- one file can define an entire local development stack
 
-## 🧪 Challenge
+## Challenge
 
-Create a complete stack:
-- Nginx as reverse proxy (port 80)
-- Node.js app (port 3000)
-- Redis cache (port 6379)
+Try these small changes one at a time:
 
-```yaml
-version: "3.8"
+1. Change Adminer from port `8080` to `8081`.
+2. Change the database name in `.env`, then restart the stack from scratch.
+3. Run `docker compose -f compose.yml down` and verify whether the volume still exists.
+4. Run `docker compose -f compose.yml down -v` and verify the difference.
 
-services:
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - app
+## Checklist
 
-  app:
-    image: node:20-slim
-    working_dir: /app
-    volumes:
-      - ./src:/app
-    command: node server.js
-    environment:
-      - REDIS_HOST=redis
-    depends_on:
-      - redis
+- [ ] I can explain what each service does
+- [ ] I can start a two-service stack with Compose
+- [ ] I know where the database credentials are defined
+- [ ] I understand the difference between `down` and `down -v`
 
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
+## Next Step
 
-volumes:
-  redis-data:
-```
-
----
-
-## ✅ Checklist
-
-- [ ] Create a docker-compose.yml file
-- [ ] Run multiple services with compose
-- [ ] Use environment variables
-- [ ] Define volumes
-- [ ] Use `depends_on` for dependencies
-- [ ] Stop all services with compose down
-
----
-
-## 🚀 Next Steps
-
-**Go to Exercise 6:** [Portainer](./06-portainer.md)
+Continue to [`06-portainer.md`](./06-portainer.md) if you want a GUI, or return to [`../4-reference/commands-cheatsheet.md`](../4-reference/commands-cheatsheet.md) for quick command review.

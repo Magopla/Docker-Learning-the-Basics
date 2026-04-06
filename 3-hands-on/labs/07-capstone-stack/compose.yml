@@ -1,0 +1,37 @@
+services:
+  web:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "8088:80"
+    volumes:
+      - ./site:/usr/share/nginx/html:ro
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-learn_capstone}
+      POSTGRES_USER: ${POSTGRES_USER:-student}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-studentpass}
+    ports:
+      - "5433:5432"
+    volumes:
+      - capstone-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-student} -d ${POSTGRES_DB:-learn_capstone}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  adminer:
+    image: adminer:4
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8081:8080"
+
+volumes:
+  capstone-postgres-data:

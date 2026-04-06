@@ -1,116 +1,43 @@
-# Docker Compose Template
-# Use this as a starting point for your docker-compose.yml files
-
-version: "3.8"
+# Compose starter template for local learning projects.
+# Adjust service names, ports, and env vars to match your app.
 
 services:
-  # ============================================
-  # Example Web Service
-  # ============================================
-  web:
+  app:
     image: nginx:alpine
-    # Or build from Dockerfile:
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile
-    container_name: web
     restart: unless-stopped
     ports:
       - "8080:80"
     volumes:
-      - ./html:/usr/share/nginx/html:ro
+      - ./app:/usr/share/nginx/html:ro
     environment:
-      - NODE_ENV=production
-    networks:
-      - app-network
+      APP_ENV: development
     depends_on:
-      - api
-    # healthcheck:
-    #   test: ["CMD", "curl", "-f", "http://localhost"]
-    #   interval: 30s
-    #   timeout: 10s
-    #   retries: 3
-
-  # ============================================
-  # Example API Service
-  # ============================================
-  api:
-    image: node:20-slim
-    container_name: api
-    restart: unless-stopped
-    working_dir: /app
-    volumes:
-      - ./src:/app
-      - /app/node_modules  # Anonymous volume to preserve node_modules
-    environment:
-      - NODE_ENV=development
-      - DATABASE_URL=postgres://user:secret@db:5432/mydb
-      - REDIS_HOST=redis
-    ports:
-      - "3000:3000"
+      - db
     networks:
-      - app-network
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_started
-    command: npm start
+      - app-net
 
-  # ============================================
-  # Database Service
-  # ============================================
   db:
     image: postgres:16-alpine
-    container_name: postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: mydb
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: appdb
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD: changeme
     volumes:
       - postgres-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-    networks:
-      - app-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user -d mydb"]
+      test: ["CMD-SHELL", "pg_isready -U appuser -d appdb"]
       interval: 10s
       timeout: 5s
       retries: 5
-
-  # ============================================
-  # Cache Service
-  # ============================================
-  redis:
-    image: redis:7-alpine
-    container_name: redis
-    restart: unless-stopped
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis-data:/data
     networks:
-      - app-network
-    command: redis-server --appendonly yes
+      - app-net
 
-# ============================================
-# Networks
-# ============================================
 networks:
-  app-network:
+  app-net:
     driver: bridge
-    # Optional: custom IP range
-    # ipam:
-    #   config:
-    #     - subnet: 172.20.0.0/16
 
-# ============================================
-# Volumes
-# ============================================
 volumes:
   postgres-data:
-    driver: local
-  redis-data:
-    driver: local

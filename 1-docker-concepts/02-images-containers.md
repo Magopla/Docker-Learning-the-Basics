@@ -1,316 +1,121 @@
-# Lesson 1.2: Images, Containers, Registries & Tags
-## The Building Blocks of Docker
+# Lesson 1.2: Images, Containers, Registries, and Tags
 
----
+These four terms are the basic vocabulary of Docker. If they are clear, the rest of Docker becomes much easier.
 
-## 🎯 Goal
+## Image
 
-Understand the four fundamental concepts of Docker:
-- **Images** - The blueprints
-- **Containers** - The running instances
-- **Registries** - The storage locations
-- **Tags** - The version labels
+An image is a reusable template for creating containers.
 
----
+You can think of it as:
 
-## 🏗️ The Docker Ecosystem
+- the packaged filesystem
+- the runtime environment
+- the default command and metadata
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    DOCKER ECOSYSTEM                              │
-│                                                                  │
-│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐      │
-│  │  REGISTRY  │────▶│   IMAGE     │────▶│  CONTAINER  │      │
-│  │  (Storage) │     │  (Template) │     │  (Running)  │      │
-│  │             │     │             │     │             │      │
-│  │ Docker Hub  │     │ nginx:1.25  │     │ my-web-server│     │
-│  │ ghcr.io     │     │ redis:7     │     │ db-prod     │      │
-│  │ ECR         │     │ python:3.12 │     │ cache       │      │
-│  └─────────────┘     └─────────────┘     └─────────────┘      │
-│         │                    │                                      │
-│         │                    │ Tag                                  │
-│         │                    ▼                                      │
-│         │           ┌─────────────┐                               │
-│         │           │ nginx:1.25  │                               │
-│         │           │ nginx:alpine│                               │
-│         │           └─────────────┘                               │
-│         │                                                        │
-└─────────────────────────────────────────────────────────────────┘
-```
+Examples:
 
----
+- `nginx:alpine`
+- `python:3.12-slim`
+- `postgres:16-alpine`
 
-## 📦 What is a Docker Image?
+Important properties of images:
 
-An image is a **read-only template** with instructions for creating a container.
+- they are read-only once built
+- they are versioned using tags
+- they can be pulled from a registry
 
-### Image Characteristics
+## Container
 
-| Characteristic | Description |
-|----------------|-------------|
-| **Immutable** | Cannot be modified once created |
-| **Layered** | Composed of multiple read-only layers |
-| **Versioned** | Each change creates a new layer |
-| **Portable** | Can be shared and run anywhere |
+A container is a running or stopped instance of an image.
 
-### Image Structure
+If an image is the template, the container is the actual thing created from it.
 
-```
-┌─────────────────────────────────┐
-│         Container Layer         │  ← Writable (creates when container runs)
-├─────────────────────────────────┤
-│         Application Layer       │  ← Your app code
-├─────────────────────────────────┤
-│         Dependencies Layer      │  ← node_modules, pip packages, etc.
-├─────────────────────────────────┤
-│         Runtime Layer           │  ← Python, Node.js, Java, etc.
-├─────────────────────────────────┤
-│         Base Image Layer        │  ← Ubuntu, Alpine, Debian
-└─────────────────────────────────┘
-```
+Examples:
 
-### Example: What nginx Image Contains
+- image: `nginx:alpine`
+- container name: `web`
 
-```
-nginx:latest
-│
-├── Ubuntu (Base Layer)
-│   └── Linux kernel, system libraries
-├── Python/Perl (Runtime)
-│   └── Package managers
-├── nginx Binary
-│   └── Web server software
-└── Configuration
-    └── Default configs
-```
-
----
-
-## 🐳 What is a Container?
-
-A container is a **runnable instance** of an image.
-
-### Container vs Image
-
-| Aspect | Image | Container |
-|--------|-------|-----------|
-| **State** | Read-only | Read-write |
-| **Purpose** | Template | Running instance |
-| **Lifecycle** | Persistent | Can be started/stopped/deleted |
-| **Changes** | Never changes | Writable layer on top |
-
-### Container Lifecycle
-
-```
-    ┌──────────┐
-    │ Created   │
-    └────┬─────┘
-         │ docker create
-         ▼
-    ┌──────────┐
-    │ Running  │◀─────────┐
-    └────┬─────┘          │
-         │                │ docker start
-         │ docker run     │
-         ▼                │
-    ┌──────────┐          │
-    │  Paused  │──────────┘
-    └────┬─────┘ docker unpause
-         │ docker pause
-         ▼
-    ┌──────────┐
-    │ Stopped  │
-    └────┬─────┘
-         │ docker stop
-         ▼
-    ┌──────────┐
-    │  Killed  │
-    └──────────┘
-```
-
----
-
-## 🏪 What is a Registry?
-
-A registry is a **storage and distribution system** for Docker images.
-
-### Registry Types
-
-| Type | Description | Examples |
-|------|-------------|----------|
-| **Public** | Free, open to everyone | Docker Hub, GitHub GHCR |
-| **Private** | Restricted access | AWS ECR, Google GCR |
-| **Self-hosted** | Run your own | Harbor, Registry |
-
-### Popular Registries
-
-| Registry | Provider | URL |
-|----------|----------|-----|
-| Docker Hub | Docker | hub.docker.com |
-| GitHub Container Registry | GitHub | ghcr.io |
-| Amazon ECR | AWS | aws.amazon.com/ecr |
-| Google Artifact Registry | Google Cloud | cloud.google.com |
-| Azure Container Registry | Microsoft Azure | azure.microsoft.com |
-
-### How Registries Work
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    PUSH & PULL WORKFLOW                          │
-│                                                                  │
-│  LOCAL MACHINE              REGISTRY              CLOUD           │
-│  ┌───────────┐            ┌───────────┐          ┌───────────┐ │
-│  │ nginx:1.25│───push───▶│ nginx:1.25│──────────▶│ S3/Cloud  │ │
-│  │  (local)  │            │ (storage) │          │  Storage  │ │
-│  └───────────┘            └───────────┘          └───────────┘ │
-│         │                      ▲                               │
-│         │                      │                               │
-│         │◀─────pull───────────┘                               │
-│         │                                                     │
-└─────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## 🏷️ What is a Tag?
-
-A tag is a **label** applied to a specific version of an image.
-
-### Tag Format
-
-```
-registry.example.com:5000/namespace/image:tag
-│                        │       │       │    │
-│                        │       │       │    └── Tag (version)
-│                        │       │       └─────── Image name
-│                        │       └─────────────── Namespace
-│                        └────────────────────── Registry (optional)
-```
-
-### Common Tag Patterns
-
-| Tag Pattern | Meaning | Example |
-|-------------|---------|---------|
-| `:latest` | Default, most recent | `nginx:latest` |
-| `:1.25.3` | Specific version | `node:20.11.0` |
-| `:-alpine` | Lightweight base | `python:3.12-alpine` |
-| `:-slim` | Minimal installation | `node:20-slim` |
-| `:-bookworm` | Debian release | `debian:bookworm` |
-| `:-jammy` | Ubuntu 22.04 LTS | `ubuntu:22.04` |
-
-### Tag Best Practices
-
-| Practice | Why |
-|----------|-----|
-| **Use specific versions** | Reproducibility |
-| **Avoid :latest in production** | Unpredictable changes |
-| **Semantic versioning** | Clear upgrade path |
-| **Date-based tags** | Reproducible builds |
-
----
-
-## 🔄 How They Work Together
-
-### Example: Running a Web Server
+This command uses an image to create a container:
 
 ```bash
-# 1. PULL image from registry
-docker pull nginx:1.25-alpine
+docker run -d --name web nginx:alpine
 ```
-```
-┌─────────┐     ┌─────────────┐     ┌─────────────┐
-│ Registry │────▶│   IMAGE     │────▶│   (stored   │
-│  (Hub)   │     │ nginx:1.25 │     │  locally)   │
-└─────────┘     └─────────────┘     └─────────────┘
-```
+
+In that example:
+
+- `nginx:alpine` is the image
+- `web` is the container
+
+## Registry
+
+A registry stores and distributes images.
+
+Common registries:
+
+- Docker Hub
+- GitHub Container Registry
+- Amazon ECR
+- Google Artifact Registry
+
+When you run `docker pull nginx:alpine`, Docker fetches that image from a registry if it is not already present locally.
+
+## Tag
+
+A tag identifies a specific version or variant of an image.
+
+Examples:
+
+- `nginx:latest`
+- `nginx:1.27`
+- `python:3.12-slim`
+- `postgres:16-alpine`
+
+The part after the colon is the tag.
+
+Why tags matter:
+
+- they help reproducibility
+- they communicate intent
+- they reduce surprise when environments are rebuilt later
+
+## Why `latest` Can Be Risky
+
+`latest` is convenient for learning, but it is not a stable version pin.
+
+For repeatable environments, prefer specific tags such as:
+
+- `postgres:16-alpine`
+- `python:3.12-slim`
+- `nginx:1.27-alpine`
+
+## How These Pieces Fit Together
+
+Typical flow:
+
+1. Pull an image from a registry.
+2. Create and run a container from that image.
+3. Inspect logs, ports, volumes, and environment.
+4. Stop and remove the container when finished.
+
+Example:
 
 ```bash
-# 2. CREATE container from image
-docker run -d -p 8080:80 --name my-server nginx:1.25-alpine
-```
-```
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│   IMAGE     │────▶│  CONTAINER  │────▶│  RUNNING!   │
-│ nginx:1.25  │     │ my-server   │     │   :8080     │
-│ (template)  │     │ (instance)  │     │   :80       │
-└─────────────┘     └─────────────┘     └─────────────┘
-```
-
----
-
-## 📝 Summary Table
-
-| Concept | What it is | Example |
-|---------|------------|---------|
-| **Image** | Read-only blueprint | `nginx:1.25-alpine` |
-| **Container** | Running instance of image | `my-web-server` |
-| **Registry** | Storage for images | Docker Hub |
-| **Tag** | Version of image | `:1.25-alpine` |
-
----
-
-## 💻 Hands-On Commands
-
-### Images
-
-```bash
-# List local images
-docker images
-
-# Pull an image
-docker pull nginx:1.25-alpine
-
-# Remove an image
-docker rmi nginx:1.25-alpine
-```
-
-### Containers
-
-```bash
-# Run a container
-docker run -d --name web nginx:1.25-alpine
-
-# List running containers
+docker pull nginx:alpine
+docker run -d --name web -p 8080:80 nginx:alpine
 docker ps
-
-# Stop container
 docker stop web
-
-# Remove container
 docker rm web
 ```
 
-### Registries
+## Summary Table
 
-```bash
-# Login to Docker Hub
-docker login
+| Term | Meaning | Example |
+| --- | --- | --- |
+| Image | Reusable template | `nginx:alpine` |
+| Container | Instance of an image | `web` |
+| Registry | Place where images are stored | Docker Hub |
+| Tag | Version or variant label | `alpine` |
 
-# Push image
-docker push username/myapp:1.0
-```
+## Next Step
 
-### Tags
-
-```bash
-# Tag an image
-docker tag myapp:latest username/myapp:1.0
-
-# Push with tag
-docker push username/myapp:1.0
-```
-
----
-
-## ✅ Key Takeaways
-
-1. **Image** = Recipe (read-only blueprint)
-2. **Container** = Cookie (running instance)
-3. **Registry** = Shelf/Library (storage)
-4. **Tag** = Version number (e.g., v1.2.3)
-
----
-
-## 🚀 Next Steps
-
-**Continue to:** [Lesson 1.3: Docker Architecture](./03-architecture.md)
+Continue to [`03-architecture.md`](./03-architecture.md).

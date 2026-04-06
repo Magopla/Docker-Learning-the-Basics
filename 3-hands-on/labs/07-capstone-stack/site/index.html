@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Docker Capstone</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: "Avenir Next", "Segoe UI", sans-serif;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background:
+          radial-gradient(circle at top left, #ffe3bf, transparent 30%),
+          radial-gradient(circle at bottom right, #d7f2ff, transparent 35%),
+          linear-gradient(135deg, #fffaf3, #f4f8fb);
+        color: #19324a;
+      }
+
+      main {
+        width: min(720px, calc(100% - 3rem));
+        padding: 2rem;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: 0 24px 60px rgba(25, 50, 74, 0.12);
+      }
+
+      h1 {
+        margin-top: 0;
+        font-size: clamp(2rem, 7vw, 3.4rem);
+      }
+
+      p {
+        line-height: 1.6;
+      }
+
+      ul {
+        line-height: 1.7;
+      }
+
+      code {
+        padding: 0.15rem 0.45rem;
+        border-radius: 999px;
+        background: #edf4fa;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Docker Capstone Stack</h1>
+      <p>
+        If you can see this page, your Compose stack is running and the Nginx
+        container is serving a bind-mounted local site.
+      </p>
+      <ul>
+        <li><code>web</code> serves this page.</li>
+        <li><code>db</code> runs PostgreSQL with a named volume.</li>
+        <li><code>adminer</code> connects to the database over the Compose network.</li>
+      </ul>
+      <p>
+        Try editing this file, then refresh the browser. If the change appears
+        immediately, your bind mount is working as expected.
+      </p>
+    </main>
+  </body>
+</html>

@@ -1,137 +1,20 @@
-# Module 3: Hands-On Exercises
-## Practice What You've Learned
+# Module 3: Hands-On
 
----
+This module is the practical part of the repository. The goal is to move from "I read about Docker" to "I can use Docker without guessing."
 
-## 🎯 Goal
+## Recommended Order
 
-Get hands-on experience with Docker through guided exercises. By the end of this module, you'll be able to:
-- ✅ Use Docker CLI confidently
-- ✅ Run and manage containers
-- ✅ Work with volumes and networks
-- ✅ Use Docker Compose for multi-container setups
-- ✅ Manage containers via Portainer
+| Exercise | Topic | Main Skill |
+| --- | --- | --- |
+| [`01-cli-essentials.md`](./01-cli-essentials.md) | Basic CLI workflow | Pull, run, list, stop, remove |
+| [`02-running-containers.md`](./02-running-containers.md) | Runtime options | Ports, env vars, bind mounts, interactive mode |
+| [`03-managing-containers.md`](./03-managing-containers.md) | Container lifecycle | Logs, exec, inspect, restart |
+| [`04-networks-volumes.md`](./04-networks-volumes.md) | Persistence and communication | Named volumes and container networking |
+| [`05-docker-compose.md`](./05-docker-compose.md) | Multi-container applications | Compose services, env files, startup flow |
+| [`06-portainer.md`](./06-portainer.md) | Optional GUI | Visual inspection and management |
+| [`07-capstone.md`](./07-capstone.md) | Final practice | Combine images, containers, ports, volumes, networks, and Compose |
 
----
-
-## 📚 Exercise Order
-
-Follow these exercises in order. Each builds on the previous one.
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    EXERCISE ROADMAP                              │
-│                                                                  │
-│  ┌─────────────────┐                                           │
-│  │   Exercise 1     │  CLI Essentials                           │
-│  │   🖥️ basics     │  docker run, pull, ps, logs              │
-│  └────────┬────────┘                                           │
-│           │                                                     │
-│           ▼                                                     │
-│  ┌─────────────────┐                                           │
-│  │   Exercise 2     │  Running Containers                       │
-│  │   🚀 containers  │  Ports, volumes, env vars                 │
-│  └────────┬────────┘                                           │
-│           │                                                     │
-│           ▼                                                     │
-│  ┌─────────────────┐                                           │
-│  │   Exercise 3     │  Managing Containers                      │
-│  │   🔧 lifecycle   │  Start, stop, exec, inspect              │
-│  └────────┬────────┘                                           │
-│           │                                                     │
-│           ▼                                                     │
-│  ┌─────────────────┐                                           │
-│  │   Exercise 4     │  Networks & Volumes                       │
-│  │   🌐 storage     │  Data persistence, container comms        │
-│  └────────┬────────┘                                           │
-│           │                                                     │
-│           ▼                                                     │
-│  ┌─────────────────┐                                           │
-│  │   Exercise 5     │  Docker Compose                           │
-│  │   📝 compose     │  Multi-container apps                     │
-│  └────────┬────────┘                                           │
-│           │                                                     │
-│           ▼                                                     │
-│  ┌─────────────────┐                                           │
-│  │   Exercise 6     │  Portainer                               │
-│  │   🖥️ GUI        │  Visual container management              │
-│  └─────────────────┘                                           │
-└─────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## 📋 Exercise Summary
-
-| # | Exercise | Time | Difficulty |
-|---|----------|------|------------|
-| 1 | [CLI Essentials](./01-cli-essentials.md) | 20 min | ⭐ Beginner |
-| 2 | [Running Containers](./02-running-containers.md) | 25 min | ⭐ Beginner |
-| 3 | [Managing Containers](./03-managing-containers.md) | 20 min | ⭐⭐ Intermediate |
-| 4 | [Networks & Volumes](./04-networks-volumes.md) | 30 min | ⭐⭐ Intermediate |
-| 5 | [Docker Compose](./05-docker-compose.md) | 40 min | ⭐⭐⭐ Advanced |
-| 6 | [Portainer](./06-portainer.md) | 15 min | ⭐ Beginner |
-
----
-
-## 🚀 Quick Start
-
-### Exercise 1: CLI Essentials
-
-Learn the essential Docker commands in 5 minutes:
-
-```bash
-# Pull an image
-docker pull nginx:alpine
-
-# Run a container
-docker run -d --name my-nginx -p 8080:80 nginx:alpine
-
-# Check it's running
-docker ps
-
-# View logs
-docker logs my-nginx
-
-# Stop and remove
-docker stop my-nginx && docker rm my-nginx
-```
-
-**📄 Go to Exercise 1:** [CLI Essentials](./01-cli-essentials.md)
-
----
-
-## 💡 Tips for Success
-
-### 1. Type Commands, Don't Copy-Paste
-Typing commands helps you remember them better.
-
-### 2. Experiment!
-Don't just follow the steps exactly. Try your own variations.
-
-### 3. Check Your Work
-After each step, use `docker ps` to verify the state.
-
-### 4. Clean Up After Each Exercise
-```bash
-# Remove containers from the exercise
-docker stop $(docker ps -aq) && docker rm $(docker ps -aq)
-
-# Remove unused images
-docker image prune -a
-```
-
----
-
-## 🆘 Need Help?
-
-1. **Check the reference:** [Commands Cheatsheet](../4-reference/commands-cheatsheet.md)
-2. **Read the logs:** `docker logs <container>`
-3. **Ask questions:** Google the exact error message
-
----
-
-## ✅ Before You Start
+## Before You Start
 
 Make sure Docker is running:
 
@@ -139,40 +22,80 @@ Make sure Docker is running:
 docker info | head -5
 ```
 
-If you see "Cannot connect to Docker daemon", start Docker Desktop:
+If that fails, go back to [`../2-setup/README.md`](../2-setup/README.md).
+
+## Labs Included In This Repo
+
+The `labs` folder contains small assets you can use while learning:
+
+```text
+3-hands-on/labs/
+├── 01-static-site/
+│   └── index.html
+├── 05-compose-postgres-adminer/
+│   ├── .env.example
+│   └── compose.yml
+└── 07-capstone-stack/
+    ├── .env.example
+    ├── compose.yml
+    └── site/
+        └── index.html
+```
+
+These are intentionally small so you can focus on Docker itself instead of application code.
+
+## Suggested Way To Practice
+
+For each exercise:
+
+1. Read the explanation once.
+2. Type the commands yourself.
+3. Run `docker ps`, `docker logs`, or `docker inspect` after each major step.
+4. Clean up before moving on unless the next exercise builds on the current one.
+
+## Cleanup Shortcuts
+
+Use these carefully while learning:
 
 ```bash
-open -a Docker
+docker ps -a
+docker volume ls
+docker network ls
+docker container prune
+docker image prune
 ```
 
----
+Avoid running `docker system prune -a` unless you understand that it can remove a lot more than the current exercise.
 
-## 📁 Files in This Folder
+## Learning Mindset
 
-```
-3-hands-on/
-├── README.md                    # ← You are here
-├── 01-cli-essentials.md        # Exercise 1
-├── 02-running-containers.md     # Exercise 2
-├── 03-managing-containers.md    # Exercise 3
-├── 04-networks-volumes.md       # Exercise 4
-├── 05-docker-compose.md          # Exercise 5
-└── 06-portainer.md              # Exercise 6
-```
+Good signs while learning Docker:
 
----
+- you can explain what the container is doing
+- you know why a port or volume flag was added
+- you can inspect state instead of retrying randomly
 
-## 👨‍🏫 Tip from Your Mentor
+If something breaks, that is useful. Docker becomes much easier once you learn how to inspect failures calmly.
 
-> **"Break things on purpose!"**
->
-> The best way to learn Docker is to experiment. Try:
-> - What happens if I don't give a container a name?
-> - What if I don't expose ports?
-> - What if I delete a container with a volume?
->
-> Breaking things teaches you how they work.
+## Module Challenge
 
----
+When you finish exercises 1 through 6, complete [`07-capstone.md`](./07-capstone.md).
 
-**Next: [Exercise 1: CLI Essentials](./01-cli-essentials.md)**
+That capstone is designed to make you use several ideas together instead of one at a time:
+
+- image tags
+- published ports
+- environment variables
+- bind mounts
+- named volumes
+- service-to-service communication through Compose
+
+## Mini Quiz
+
+1. Which command tells you what containers are currently running?
+2. Which command is better when you want facts about configuration: `docker logs` or `docker inspect`?
+3. What is the difference between a bind mount and a named volume?
+
+## Next Step
+
+Start with [`01-cli-essentials.md`](./01-cli-essentials.md).

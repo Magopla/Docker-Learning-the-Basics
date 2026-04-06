@@ -1,230 +1,71 @@
-# Module 1: Docker Core Concepts
-## Understanding Containerization
-
----
-
-## 🎯 Goal
-
-By the end of this module, you will understand:
-- ✅ What Docker is and why it exists
-- ✅ How Docker differs from Virtual Machines
-- ✅ Core Docker concepts: Images, Containers, Registries, Tags
-- ✅ The Docker architecture
-
----
-
-## 📚 Table of Contents
-
-| Lesson | Topic | Time |
-|--------|-------|------|
-| 1.1 | [Virtualization vs Containers](./01-virtualization-vs-containers.md) | 15 min |
-| 1.2 | [Images, Containers, Registries & Tags](./02-images-containers.md) | 15 min |
-| 1.3 | [Docker Architecture](./03-architecture.md) | 10 min |
-
----
-
-## 🚀 Quick Introduction
-
-### What is Docker?
-
-**Docker** is a platform for building, running, and shipping applications in **containers**.
-
-Think of it like a **shipping container** for software:
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│              REAL WORLD EXAMPLE                                  │
-│                                                                  │
-│   🚢 Shipping Container                                          │
-│   ┌─────────────────────────────────┐                          │
-│   │  ┌─────┐ ┌─────┐ ┌─────┐      │                          │
-│   │  │Chair│ │Table│ │Shelf│      │  All the same container  │
-│   │  └─────┘ └─────┘ └─────┘      │  Same truck, same ship    │
-│   └─────────────────────────────────┘                          │
-│                                                                  │
-│   🐳 Docker Container                                            │
-│   ┌─────────────────────────────────┐                          │
-│   │  ┌─────┐ ┌─────┐ ┌─────┐      │                          │
-│   │  │ App │ │ DB  │ │ Cache│     │  Same container           │
-│   │  │ Code│ │ Data│ │ Logs │     │  Same host, same kernel   │
-│   │  └─────┘ └─────┘ └─────┘      │                          │
-│   └─────────────────────────────────┘                          │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-### Why Do Data Engineers Need Docker?
-
-| Use Case | How Docker Helps |
-|----------|-----------------|
-| **Data Pipelines** | Package Spark, Kafka, Airflow in one container |
-| **Database Testing** | Spin up PostgreSQL, MongoDB instantly |
-| **Reproducibility** | Same environment across dev, test, prod |
-| **Isolation** | Dependencies don't conflict |
-| **Scaling** | Scale containers up or down easily |
-
----
-
-## 📖 The Problem Docker Solves
-
-### "It works on my machine!"
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    THE CLASSIC PROBLEM                           │
-│                                                                  │
-│  Developer:  "Works on my machine!" 💻                          │
-│                      ↓                                           │
-│  Production: "It's broken!" 🚨                                   │
-│                                                                  │
-│  Why?                                                           │
-│  • Different OS versions                                         │
-│  • Different Python versions                                     │
-│  • Missing dependencies                                         │
-│  • Different configuration                                       │
-└─────────────────────────────────────────────────────────────────┘
-```
+# Module 1: Docker Concepts
 
-### Docker's Solution
+This module gives you the mental model that makes the CLI exercises easier to understand.
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    THE DOCKER SOLUTION                           │
-│                                                                  │
-│  ┌─────────────────┐                                            │
-│  │   DEVELOPER     │                                            │
-│  │   Machine        │                                            │
-│  │                 │                                            │
-│  │  ┌───────────┐  │                                            │
-│  │  │ Container │  │  ←─── "It works EVERYWHERE!"               │
-│  │  │ Python 3.11│  │                                           │
-│  │  │ + packages │  │                                           │
-│  │  └───────────┘  │                                           │
-│  └─────────────────┘                                            │
-│           ↓ same container ↓                                     │
-│  ┌─────────────────┐                                            │
-│  │   PRODUCTION     │                                            │
-│  │   Server         │                                            │
-│  │                 │                                            │
-│  │  ┌───────────┐  │                                            │
-│  │  │ Container │  │  ←─── Identical!                           │
-│  │  │ Python 3.11│  │                                           │
-│  │  │ + packages │  │                                           │
-│  │  └───────────┘  │                                           │
-│  └─────────────────┘                                            │
-└─────────────────────────────────────────────────────────────────┘
-```
+## Learning Goal
 
----
+By the end of this module, you should be able to explain:
 
-## 🎓 Key Concepts Preview
+- why containers exist
+- how containers differ from virtual machines
+- what an image is
+- what a container is
+- what a registry and a tag are
+- what the Docker client and daemon each do
 
-Before diving deep, here's a quick overview:
+## Lessons
 
-| Concept | Simple Explanation | Analogy |
-|---------|-------------------|---------|
-| **Image** | Blueprint for a container | Recipe |
-| **Container** | Running instance of an image | Cookie |
-| **Registry** | Where images are stored | Library |
-| **Tag** | Version of an image | ISBN number |
+| Lesson | Focus | Why it matters |
+| --- | --- | --- |
+| [`01-virtualization-vs-containers.md`](./01-virtualization-vs-containers.md) | VMs vs containers | Explains why Docker feels faster and lighter |
+| [`02-images-containers.md`](./02-images-containers.md) | Images, containers, registries, tags | Gives you the core Docker vocabulary |
+| [`03-architecture.md`](./03-architecture.md) | Client, daemon, socket, objects | Helps you reason about how Docker works under the hood |
 
----
+## Recommended Reading Order
 
-## 📝 Lessons
+1. Read the VM vs container comparison.
+2. Learn the image/container/registry/tag model.
+3. Finish with the Docker architecture overview.
 
-### Lesson 1.1: Virtualization vs Containers
-📄 [Read: Virtualization vs Containers](./01-virtualization-vs-containers.md)
+## What To Pay Attention To
 
-Learn the architectural differences between VMs and containers.
+While reading, focus on these ideas:
 
----
+- containers are not tiny virtual machines
+- images are templates, containers are running instances
+- registries store images
+- tags identify versions or variants
+- the Docker CLI talks to the Docker daemon
 
-### Lesson 1.2: Images, Containers, Registries & Tags
-📄 [Read: Images, Containers, Registries & Tags](./02-images-containers.md)
+If you understand those five points, the hands-on section becomes much easier.
 
-Understand the building blocks of Docker.
+## Quick Self-Check
 
----
+Try answering these before moving on:
 
-### Lesson 1.3: Docker Architecture
-📄 [Read: Docker Architecture](./03-architecture.md)
+1. Why are containers usually faster to start than VMs?
+2. What is the difference between `nginx:alpine` and a running container named `web`?
+3. Where does Docker pull an image from if it is not available locally?
+4. Why is relying on `latest` usually a bad idea for reproducible environments?
 
-See how all the pieces fit together.
+## Module Exercise
 
----
+Write short answers to these in your own words:
 
-## 🧪 Quick Quiz
+1. Explain image vs container using one concrete example.
+2. Explain why containers usually start faster than VMs.
+3. Explain what role the daemon plays when you run `docker run`.
 
-Test your understanding before moving on:
+If you can answer those without looking back, you are ready for the setup and CLI practice modules.
 
-### Question 1
-What is the difference between an image and a container?
+## Checklist
 
-<details>
-<summary>Click for answer</summary>
+- [ ] I can explain image vs container
+- [ ] I can explain VM vs container at a high level
+- [ ] I know what a registry does
+- [ ] I know what a tag represents
+- [ ] I know the Docker client is not the same thing as the daemon
 
-An **image** is a read-only template with instructions for creating a container. A **container** is a runnable instance of that image.
+## Next Step
 
-</details>
-
-### Question 2
-Name three popular Docker registries.
-
-<details>
-<summary>Click for answer</summary>
-
-- Docker Hub
-- Amazon ECR
-- Google Container Registry (GCR)
-- GitHub Container Registry (GHCR)
-- Azure Container Registry
-
-</details>
-
-### Question 3
-What does a tag represent?
-
-<details>
-<summary>Click for answer</summary>
-
-A **tag** represents a specific version of an image, like `nginx:1.25` or `python:3.12-slim`.
-
-</details>
-
----
-
-## ✅ Module 1 Checklist
-
-Before moving on, confirm you understand:
-
-- [ ] Why we use containers (not VMs for everything)
-- [ ] What is an image vs container
-- [ ] What is a registry
-- [ ] What is a tag
-
----
-
-## 🚀 Next Steps
-
-**Option A: Install Docker**
-Ready to get hands-on? Install Docker and start practicing.
-
-📄 [Go to Setup](../2-setup/README.md)
-
-**Option B: Jump to Hands-On**
-Go directly to running your first container.
-
-📄 [Go to CLI Essentials](../3-hands-on/01-cli-essentials.md)
-
----
-
-## 👨‍🏫 Tip from Your Mentor
-
-> **"Understanding comes before memorizing."**
->
-> Don't try to memorize all the commands yet. First, understand WHY Docker exists. The commands will make more sense once you know what problem they're solving.
->
-> Ask yourself: "If I were designing Docker, how would I solve the 'works on my machine' problem?"
-
----
-
-**Next: [Lesson 1.1: Virtualization vs Containers](./01-virtualization-vs-containers.md)**
+Start with [`01-virtualization-vs-containers.md`](./01-virtualization-vs-containers.md).

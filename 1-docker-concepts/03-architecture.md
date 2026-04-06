@@ -1,298 +1,100 @@
 # Lesson 1.3: Docker Architecture
-## How All the Pieces Fit Together
 
----
+This lesson explains what happens between the command you type and the container you see running.
 
-## 🎯 Goal
+## The Main Pieces
 
-Understand how Docker's components work together to build, run, and manage containers.
+At a high level, Docker has four pieces worth remembering:
 
----
+| Piece | Role |
+| --- | --- |
+| Docker client | The `docker` CLI you type into |
+| Docker daemon | The background service that does the work |
+| Docker objects | Images, containers, networks, and volumes |
+| Registry | External storage for images |
 
-## 🏗️ Docker Architecture Overview
+## Client vs Daemon
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                      DOCKER ARCHITECTURE                         │
-│                                                                  │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │                    DOCKER CLIENT                         │   │
-│  │                     (Your CLI)                          │   │
-│  │         docker build, docker run, docker pull           │   │
-│  └────────────────────────┬────────────────────────────────┘   │
-│                           │                                      │
-│                           ▼                                      │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │                    DOCKER DAEMON                        │   │
-│  │                   (dockerd)                             │   │
-│  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ │   │
-│  │  │ Builder  │ │  Packager │ │ Runner   │ │Registry  │ │   │
-│  │  └──────────┘ └──────────┘ └──────────┘ └──────────┘ │   │
-│  └────────────────────────┬────────────────────────────────┘   │
-│                           │                                      │
-│                           ▼                                      │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │                 CONTAINERS & IMAGES                      │   │
-│  │  ┌─────────┐  ┌─────────┐  ┌─────────┐                │   │
-│  │  │Cont 1   │  │Cont 2   │  │Cont 3   │                │   │
-│  │  │nginx    │  │postgres │  │redis    │                │   │
-│  │  └─────────┘  └─────────┘  └─────────┘                │   │
-│  └────────────────────────┬────────────────────────────────┘   │
-│                           │                                      │
-│                           ▼                                      │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │                 LINUX KERNEL                            │   │
-│  │          (cgroups, namespaces, overlayfs)               │   │
-│  └─────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## 🔧 Components
-
-### 1. Docker Client (CLI)
-
-The **command-line tool** you interact with.
+When you run a command like:
 
 ```bash
-docker run nginx                    # You type this
-     ↑
-     └── Docker Client sends to Daemon
+docker run nginx:alpine
 ```
 
-**Location:** Installed on your machine  
-**Commands:** `docker build`, `docker run`, `docker pull`, etc.
+the CLI does not run the container by itself.
 
----
+Instead:
 
-### 2. Docker Daemon (dockerd)
+1. the Docker client sends a request
+2. the Docker daemon receives it
+3. the daemon checks whether the image exists locally
+4. if needed, it pulls the image from a registry
+5. the daemon creates and starts the container
 
-The **background service** that manages containers.
+That client/daemon split explains many common beginner issues, especially:
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        DAEMON RESPONSIBILITIES                   │
-│                                                                  │
-│  ┌───────────────┐  ┌───────────────┐  ┌───────────────┐       │
-│  │   Building    │  │    Image      │  │   Container   │       │
-│  │   Images     │  │   Management   │  │   Lifecycle   │       │
-│  │              │  │               │  │               │       │
-│  │ docker build │  │ docker images │  │ docker run    │       │
-│  │              │  │ docker pull   │  │ docker start  │       │
-│  └───────────────┘  └───────────────┘  └───────────────┘       │
-│                                                                  │
-│  ┌───────────────┐  ┌───────────────┐                          │
-│  │   Networks   │  │   Volumes     │                          │
-│  │              │  │               │                          │
-│  │ docker network│  │ docker volume │                          │
-│  └───────────────┘  └───────────────┘                          │
-└─────────────────────────────────────────────────────────────────┘
-```
+- the daemon is not running
+- the client exists but cannot connect
+- permissions around the Docker socket
 
-**Location:** Runs in background (system service)  
-**Socket:** `/var/run/docker.sock`
+## Docker Objects
 
----
+The daemon manages the objects you work with every day:
 
-### 3. Docker Registry
+- images
+- containers
+- networks
+- volumes
 
-**Storage** for Docker images.
+You can think of them like this:
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                      DOCKER HUB                                  │
-│                                                                  │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │ 🔍 Search: "nginx"                                       │   │
-│  ├─────────────────────────────────────────────────────────┤   │
-│  │                                                         │   │
-│  │ OFFICIAL REPOSITORIES                                    │   │
-│  │  ┌─────────┐  ┌─────────┐  ┌─────────┐                │   │
-│  │  │  nginx  │  │ python  │  │  redis  │  ...           │   │
-│  │  │ 500M+   │  │ 300M+   │  │  10M+   │                │   │
-│  │  │ downloads│  │ downloads│  │ downloads │              │   │
-│  │  └─────────┘  └─────────┘  └─────────┘                │   │
-│  │                                                         │   │
-│  └─────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────┘
-```
+- image: what to run
+- container: the running instance
+- network: how containers talk
+- volume: where persistent data lives
 
-**Default:** Docker Hub (hub.docker.com)  
-**Private:** AWS ECR, Google GCR, self-hosted
+## Registry In The Architecture
 
----
+Registries sit outside your machine and store images.
 
-### 4. Docker Objects
-
-#### Images (Templates)
+Common example:
 
 ```bash
-# Images are built from Dockerfile
-docker build -t myapp:1.0 .
+docker pull postgres:16-alpine
 ```
 
-#### Containers (Instances)
+If that image is not cached locally, the daemon downloads it from a registry such as Docker Hub.
 
-```bash
-# Containers run from images
-docker run -d myapp:1.0
-```
+## The Docker Socket
 
-#### Networks (Communication)
+On many systems, the client talks to the daemon through the Docker socket:
 
-```bash
-# Containers communicate via networks
-docker network create my-network
-docker run --network my-network nginx
-```
-
-#### Volumes (Persistence)
-
-```bash
-# Data persists in volumes
-docker run -v my-volume:/data postgres
-```
-
----
-
-## 🔄 Request Flow
-
-### When You Run `docker run nginx`:
-
-```
-┌─────────┐         ┌─────────┐         ┌─────────┐         ┌─────────┐
-│  YOU   │         │ CLIENT  │         │ DAEMON  │         │REGISTRY │
-└────┬────┘         └────┬────┘         └────┬────┘         └────┬────┘
-     │                   │                   │                   │
-     │ 1. docker run    │                   │                   │
-     │ nginx            │                   │                   │
-     │─────────────────▶│                   │                   │
-     │                   │ 2. Pull nginx    │                   │
-     │                   │─────────────────▶│                   │
-     │                   │                   │    3. Check      │
-     │                   │                   │    local cache   │
-     │                   │                   │◀──────┐           │
-     │                   │                   │       │ Found!   │
-     │                   │ 4. Already exists │───────┘           │
-     │                   │◀─────────────────│                   │
-     │                   │                   │                   │
-     │                   │ 5. Create & Start│                   │
-     │                   │     Container    │                   │
-     │                   │─────────────────▶│                   │
-     │                   │                   │                   │
-     │ 6. Running!       │                   │                   │
-     │◀─────────────────│                   │                   │
-     │                   │                   │                   │
-     │                   │                   │                   │
-     │                   │                   │                   │
-     ▼                   ▼                   ▼                   ▼
-```
-
----
-
-## 📁 Key Locations (macOS)
-
-| Component | Location |
-|-----------|----------|
-| Docker.sock | `/var/run/docker.sock` |
-| Images | Inside Docker VM |
-| Volumes | Inside Docker VM |
-| Config | `~/Library/Containers/com.docker.docker` |
-
-### Where Are Volumes Stored?
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                     macOS DOCKER DESKTOP                        │
-│                                                                  │
-│  Your Mac                                              Docker VM  │
-│  ┌───────────────┐                              ┌─────────────┐│
-│  │ docker CLI   │                              │ Images      ││
-│  │              │                              │ Containers  ││
-│  │ docker.sock │═════════════════════════════▶│ Volumes     ││
-│  │ (socket)    │                              │             ││
-│  └───────────────┘                              │ /var/lib/   ││
-│                                                  │   docker/   ││
-│                                                  └─────────────┘│
-└─────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## ⚙️ Docker Desktop vs Docker Engine
-
-| Component | Docker Desktop | Docker Engine |
-|-----------|----------------|---------------|
-| **Includes** | Docker Engine + GUI + Kubernetes | CLI only |
-| **Platform** | macOS, Windows | Linux |
-| **GUI** | ✅ Included | ❌ Not included |
-| **Kubernetes** | ✅ Built-in | ❌ Manual install |
-| **Cost** | Free (personal use) | Free (open source) |
-
----
-
-## 🔒 The Docker Socket
-
-The socket file that allows communication with the Docker daemon.
-
-```bash
-# Socket location
+```text
 /var/run/docker.sock
 ```
 
-### What Needs Socket Access?
+This matters because anything with access to that socket can often control Docker on the host.
 
-| Tool | Why |
-|------|-----|
-| Portainer | To manage containers |
-| Docker CLI | To run commands |
-| CI/CD tools | To build/deploy |
+That is why tools like Portainer can manage containers when they mount the socket, and also why that access should be treated carefully.
 
-### Security Note
+## Docker Desktop Note
 
-> ⚠️ **The socket gives root access!**
-> 
-> Anyone with access to the socket can control Docker, which means access to the host system.
+On macOS and Windows, Docker Desktop provides a local Docker environment and hides some Linux-specific details behind the scenes.
 
-```bash
-# Bind mounting the socket (used by Portainer)
--v /var/run/docker.sock:/var/run/docker.sock
-```
+For learning, that means:
 
----
+- you can use normal Docker commands
+- images, containers, and volumes are managed by Docker Desktop
+- the conceptual model stays the same even if the implementation is slightly different from Linux
 
-## 📊 Summary
+## Summary
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                      SUMMARY                                     │
-│                                                                  │
-│  ┌────────────┐    ┌────────────┐    ┌────────────┐            │
-│  │   Client   │───▶│   Daemon   │───▶│ Containers │            │
-│  │   (CLI)    │    │  (dockerd) │    │            │            │
-│  └────────────┘    └─────┬──────┘    └────────────┘            │
-│                          │                                      │
-│                          ▼                                      │
-│                   ┌────────────┐                                │
-│                   │  Registry  │                                │
-│                   │ (Docker Hub)│                               │
-│                   └────────────┘                                │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
-```
+- The CLI sends requests.
+- The daemon performs the work.
+- Registries store images.
+- Images, containers, networks, and volumes are the main Docker objects.
+- Socket access is powerful and should be treated as privileged access.
 
----
+## Next Step
 
-## ✅ Key Takeaways
-
-1. **Client** = You (CLI commands)
-2. **Daemon** = Background service (does the work)
-3. **Registry** = Image storage (like GitHub for code)
-4. **Socket** = Communication channel between client and daemon
-
----
-
-## 🚀 Next Steps
-
-**Continue to:** [Module 2: Setup](../2-setup/README.md)
+Continue to [`../2-setup/README.md`](../2-setup/README.md).

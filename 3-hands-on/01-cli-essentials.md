@@ -1,224 +1,116 @@
 # Exercise 1: Docker CLI Essentials
-## Learn the Basic Commands
 
----
+This exercise introduces the basic command loop you will use constantly in Docker: pull, run, inspect, stop, and remove.
 
-## 🎯 Goal
+## Learning Goal
 
-Learn the essential Docker CLI commands. By the end, you'll be able to:
-- Pull images from Docker Hub
-- Run basic containers
-- List containers and images
-- Stop and remove containers
+By the end of this exercise, you should be able to:
 
-**Time: ~20 minutes**
+- pull an image
+- run a container
+- list containers and images
+- read basic logs
+- stop and remove a container
 
----
-
-## 📝 Prerequisites
-
-- Docker Desktop is running
-- Terminal is open
-
----
-
-## 1️⃣ Check Docker Installation
-
-Let's verify Docker is working:
+## Step 1: Verify Docker Works
 
 ```bash
-# Check Docker version
 docker --version
-
-# Check Docker Compose version
 docker compose version
-
-# Get Docker system info
 docker info | head -10
 ```
 
-**Expected output:**
-```
-Docker version 26.0.0, build xxxxxxx
-Docker Compose version v2.x.x
-Client:
- Version:    26.0.0
- ...
-```
+If `docker info` fails, go back to [`../2-setup/README.md`](../2-setup/README.md).
 
----
-
-## 2️⃣ Run Your First Container
+## Step 2: Run The First Test Container
 
 ```bash
 docker run hello-world
-```
-
-**What happened?**
-1. Docker checked for `hello-world` image locally
-2. Not found, so it pulled from Docker Hub
-3. Created a container from the image
-4. Container ran and printed the message
-5. Container exited
-
-**Check the container:**
-```bash
 docker ps -a
 ```
 
-You'll see the `hello-world` container with status "Exited".
+Why this is useful:
 
----
+- Docker proves it can pull an image
+- Docker creates and runs a container
+- the container exits after printing a success message
 
-## 3️⃣ Pull Images
-
-Images are downloaded from registries. Let's pull some:
+## Step 3: Pull A Few Images
 
 ```bash
-# Pull nginx (web server)
 docker pull nginx:alpine
-
-# Pull Ubuntu
 docker pull ubuntu:22.04
-
-# Pull Python
 docker pull python:3.12-slim
-```
-
-**List your images:**
-```bash
 docker images
 ```
 
-**Output:**
-```
-REPOSITORY   TAG        IMAGE ID       SIZE
-nginx        alpine     a6bd71f48f68   142MB
-ubuntu       22.04      8a3cdc4b8d9c   77.8MB
-python       3.12-slim  4aeca2f7d4b8    143MB
-hello-world  latest     9c7a54a9a43c   9.14kB
-```
+This teaches an important distinction:
 
----
+- pulling downloads an image
+- running creates a container from an image
 
-## 4️⃣ Run Containers
-
-### Run nginx (Web Server)
+## Step 4: Run A Long-Lived Container
 
 ```bash
-# Run nginx in background (detached)
 docker run -d --name web-server nginx:alpine
-
-# Check it's running
 docker ps
-
-# Should see:
-# CONTAINER ID   IMAGE          STATUS       PORTS     NAMES
-# xxxxxxxx        nginx:alpine   Up 2 mins   80/tcp    web-server
-```
-
-### Access nginx
-
-Since we're in a container, let's just verify it's running:
-
-```bash
-# Check nginx logs
 docker logs web-server
-
-# Get container info
 docker inspect web-server | head -20
 ```
 
----
+This container stays alive because Nginx is a long-running service.
 
-## 5️⃣ List Containers
-
-```bash
-# List running containers
-docker ps
-
-# List ALL containers (including stopped)
-docker ps -a
-
-# List only container IDs
-docker ps -q
-```
-
----
-
-## 6️⃣ Stop and Remove Containers
+## Step 5: Stop And Remove It
 
 ```bash
-# Stop a container
 docker stop web-server
-
-# Check status
-docker ps
-
-# Container is stopped but still exists
 docker ps -a
-
-# Remove the container
 docker rm web-server
-
-# Verify it's gone
 docker ps -a
 ```
 
----
+This is the basic cleanup loop you will use often while learning.
 
-## 7️⃣ Quick Reference Commands
+## Useful Commands From This Exercise
 
-| Command | What it does |
-|---------|-------------|
-| `docker images` | List downloaded images |
-| `docker ps` | List running containers |
-| `docker ps -a` | List all containers |
-| `docker run <image>` | Create & start container |
-| `docker stop <name>` | Stop container |
-| `docker rm <name>` | Remove container |
-| `docker logs <name>` | View container logs |
+| Command | Purpose |
+| --- | --- |
+| `docker pull <image>` | Download an image |
+| `docker run <image>` | Create and start a container |
+| `docker ps` | Show running containers |
+| `docker ps -a` | Show all containers, including stopped ones |
+| `docker images` | Show local images |
+| `docker logs <name>` | Read container logs |
+| `docker stop <name>` | Stop a running container |
+| `docker rm <name>` | Remove a container |
 
----
+## Challenge
 
-## 🧪 Challenge
+Try this without copying the solution first:
 
-Try this on your own:
+1. Pull `redis:7-alpine`.
+2. Run it as `my-redis`.
+3. Confirm it appears in `docker ps`.
+4. Stop and remove it.
 
-1. Pull the `redis:alpine` image
-2. Run a container named `my-redis`
-3. Check it's running
-4. Stop and remove it
+Reference solution:
 
-**Solution:**
 ```bash
-# 1. Pull
-docker pull redis:alpine
-
-# 2. Run
-docker run -d --name my-redis redis:alpine
-
-# 3. Check
+docker pull redis:7-alpine
+docker run -d --name my-redis redis:7-alpine
 docker ps
-
-# 4. Stop & Remove
-docker stop my-redis && docker rm my-redis
+docker stop my-redis
+docker rm my-redis
 ```
 
----
+## Checklist
 
-## ✅ Checklist
+- [ ] I can pull an image
+- [ ] I can run a container
+- [ ] I know the difference between an image and a container
+- [ ] I can read logs
+- [ ] I can stop and remove a container
 
-Before moving on, make sure you can:
+## Next Step
 
-- [ ] `docker run hello-world` works
-- [ ] `docker pull nginx:alpine` works
-- [ ] `docker images` shows downloaded images
-- [ ] `docker ps` shows running containers
-- [ ] `docker stop` and `docker rm` work
-
----
-
-## 🚀 Next Steps
-
-**Go to Exercise 2:** [Running Containers](./02-running-containers.md)
+Continue to [`02-running-containers.md`](./02-running-containers.md).

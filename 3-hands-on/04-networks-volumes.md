@@ -1,236 +1,134 @@
-# Exercise 4: Networks & Volumes
-## Data Persistence & Container Communication
+# Exercise 4: Networks and Volumes
 
----
+This exercise covers two ideas that show up in almost every real Docker setup:
 
-## 🎯 Goal
+- how containers talk to each other
+- how data survives container replacement
 
-Learn to:
-- Create and manage Docker networks
-- Connect containers to networks
-- Use volumes for data persistence
-- Enable container-to-container communication
+## Learning Goal
 
-**Time: ~30 minutes**
+By the end of this exercise, you should be able to:
 
----
+- create a user-defined network
+- connect multiple containers to it
+- use container names as hostnames
+- create and inspect named volumes
+- explain bind mounts vs named volumes
 
-## 1️⃣ Docker Networks
-
-### Network Drivers
-
-| Driver | Description | Use Case |
-|--------|-------------|----------|
-| `bridge` | Default, single host | Most common |
-| `host` | Remove network isolation | Performance critical |
-| `overlay` | Multi-host | Swarm clusters |
-| `none` | No networking | Isolated containers |
-
-### Default Bridge Network
+## Step 1: Create A Network
 
 ```bash
-# All containers connect to default bridge
-docker run -d --name app1 nginx:alpine
-docker run -d --name app2 nginx:alpine
-
-# Check they're on same network
-docker inspect app1 --format '{{.NetworkSettings.Networks}}'
-```
-
-### Custom Bridge Network
-
-```bash
-# Create a custom network
-docker network create my-network
-
-# Run containers on this network
-docker run -d --name web --network my-network nginx:alpine
-docker run -d --name api --network my-network redis:7-alpine
-
-# Containers can reach each other by name!
-docker exec web ping -c 1 api
-
-# List networks
-docker network ls
-```
-
-### Inspect Network
-
-```bash
-docker network inspect my-network
-```
-
-### Remove Network
-
-```bash
-docker network rm my-network
-```
-
----
-
-## 2️⃣ Container Communication
-
-Containers on the same network can communicate:
-
-```bash
-# Create network
 docker network create demo-net
+docker network ls
+docker network inspect demo-net
+```
 
-# Run nginx (will respond to ping)
+The important thing is not the command itself, but the idea: containers on the same user-defined bridge network can usually discover each other by name.
+
+## Step 2: Put Two Containers On The Same Network
+
+```bash
 docker run -d --name web --network demo-net nginx:alpine
-
-# Run alpine with ping
 docker run -d --name client --network demo-net alpine sleep infinity
+```
 
-# Ping from client to web
+Now test connectivity:
+
+```bash
 docker exec client ping -c 3 web
-
-# Containers use service names as hostnames
 docker exec client wget -O- http://web
 ```
 
-### Clean up
+Because both containers are on `demo-net`, `web` works as a hostname.
+
+## Step 3: Clean Up The Network Demo
 
 ```bash
-docker stop web client
-docker rm web client
+docker rm -f web client
 docker network rm demo-net
 ```
 
----
-
-## 3️⃣ Volumes for Persistence
-
-### Volume Types
-
-| Type | Syntax | Use Case |
-|------|--------|----------|
-| Named volume | `-v my-volume:/path` | Persistent data |
-| Bind mount | `-v /host/path:/container/path` | Development |
-| tmpfs | `--tmpfs /path` | Sensitive data (RAM) |
-
-### Named Volumes
+## Step 4: Create A Named Volume
 
 ```bash
-# Create volume
-docker volume create my-data
-
-# Use volume with container
-docker run -d --name db \
-  -v my-data:/var/lib/postgresql/data \
-  postgres:16-alpine
-
-# Write some data (simulate)
-docker exec db psql -U postgres -c "CREATE TABLE test (id int);"
-
-# Data persists after container removal!
-docker rm -f db
-
-# Start new container with same volume
-docker run -d --name db2 \
-  -v my-data:/var/lib/postgresql/data \
-  postgres:16-alpine
-
-# Data is still there!
-docker exec db2 psql -U postgres -c "\dt"
-
-# Clean up
-docker rm -f db2
-docker volume rm my-data
+docker volume create postgres-data
+docker volume ls
+docker volume inspect postgres-data
 ```
 
-### Bind Mounts (Host Directory)
+Named volumes are managed by Docker and are usually the best choice for persistent container data.
+
+## Step 5: Use The Volume With PostgreSQL
 
 ```bash
-# Create host directory
-mkdir -p ~/docker-data/app
-
-# Mount to container
-docker run -d --name dev \
-  -v ~/docker-data/app:/app \
-  -w /app \
-  node:20 node -e "require('fs').writeFileSync('/app/test.txt', 'Hello')"
-
-# Check on host
-cat ~/docker-data/app/test.txt
-```
-
----
-
-## 4️⃣ Practical Example: Database Stack
-
-```bash
-# Create network
-docker network create app-net
-
-# Run PostgreSQL
 docker run -d \
-  --name postgres \
-  --network app-net \
+  --name pg-demo \
   -e POSTGRES_PASSWORD=secret \
-  -e POSTGRES_DB=mydb \
   -v postgres-data:/var/lib/postgresql/data \
   postgres:16-alpine
-
-# Run pgAdmin (web UI for PostgreSQL)
-docker run -d \
-  --name pgadmin \
-  --network app-net \
-  -p 8080:80 \
-  -e PGADMIN_DEFAULT_EMAIL=admin@admin.com \
-  -e PGADMIN_DEFAULT_PASSWORD=admin \
-  dpage/pgadmin4:latest
-
-# In pgAdmin, connect to: postgres:5432
-# (container name as hostname works!)
-
-# Clean up
-docker stop postgres pgadmin
-docker rm postgres pgadmin
-docker network rm app-net
-docker volume rm postgres-data
 ```
 
----
-
-## 🧪 Challenge
-
-Create a two-container setup:
-1. Redis cache (port 6379)
-2. A script that writes to Redis
+Now remove the container but keep the volume:
 
 ```bash
-# 1. Create network
+docker rm -f pg-demo
+docker volume ls
+```
+
+That is the key idea: the data can outlive the container.
+
+## Bind Mount vs Named Volume
+
+Use a bind mount when:
+
+- you want to work with files from your host directly
+- you are developing locally
+- you want immediate file changes to be visible in the container
+
+Use a named volume when:
+
+- Docker-managed persistence is enough
+- the data belongs to the containerized service
+- you do not need to edit the files directly from the host
+
+## Quick Bind Mount Reminder
+
+You already used a bind mount in the static-site lab:
+
+```bash
+-v "$(pwd)/3-hands-on/labs/01-static-site:/usr/share/nginx/html:ro"
+```
+
+That is a host folder mounted into the container.
+
+## Challenge
+
+Build a small networked setup:
+
+1. Create a network called `redis-net`.
+2. Run Redis on that network.
+3. Use a one-off Redis client container on the same network to set a key.
+4. Use another one-off client container to get the key back.
+
+Suggested commands:
+
+```bash
 docker network create redis-net
-
-# 2. Run Redis
 docker run -d --name redis --network redis-net redis:7-alpine
-
-# 3. Run a client that writes to Redis
-docker run --rm --network redis-net \
-  redis:7-alpine redis-cli -h redis SET test "Hello Redis!"
-
-# 4. Read from Redis
-docker run --rm --network redis-net \
-  redis:7-alpine redis-cli -h redis GET test
-
-# 5. Clean up
+docker run --rm --network redis-net redis:7-alpine redis-cli -h redis SET test "hello"
+docker run --rm --network redis-net redis:7-alpine redis-cli -h redis GET test
 docker rm -f redis
 docker network rm redis-net
 ```
 
----
+## Checklist
 
-## ✅ Checklist
+- [ ] I can create and inspect a network
+- [ ] I know why container names work as hostnames on a user-defined network
+- [ ] I can create and inspect a named volume
+- [ ] I understand why data can survive container removal
+- [ ] I can explain bind mount vs named volume
 
-- [ ] Create a custom bridge network
-- [ ] Connect containers to network
-- [ ] Use container names for DNS
-- [ ] Create and use named volumes
-- [ ] Persist data across container restarts
+## Next Step
 
----
-
-## 🚀 Next Steps
-
-**Go to Exercise 5:** [Docker Compose](./05-docker-compose.md)
+Continue to [`05-docker-compose.md`](./05-docker-compose.md).
