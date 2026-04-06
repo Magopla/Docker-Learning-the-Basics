@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel full-width-panel">
+  <div class="panel-heading">
+    <h2>Cup Trophy</h2>
+    <span>Knockout round every two weeks</span>
+  </div>
+  <div class="cup-bracket">
+    {% for round in cup.rounds %}
+    <section class="round-column">
+      <h3>{{ round.stage_name }}</h3>
+      <p>Week {{ round.week }}</p>
+      {% if round.matches %}
+        {% for match in round.matches %}
+        <article class="score-row">
+          <div class="teams">
+            <div class="team-line"><span>{{ match.home_short_name }}</span><strong>{{ match.home_score if match.status == 'finished' else '-' }}</strong></div>
+            <div class="team-line"><span>{{ match.away_short_name }}</span><strong>{{ match.away_score if match.status == 'finished' else '-' }}</strong></div>
+          </div>
+          {% if match.winner %}
+          <small class="note">Winner: {{ match.winner }}</small>
+          {% endif %}
+        </article>
+        {% endfor %}
+      {% else %}
+      <div class="placeholder-card">Will be generated when the previous round is complete.</div>
+      {% endif %}
+    </section>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
+

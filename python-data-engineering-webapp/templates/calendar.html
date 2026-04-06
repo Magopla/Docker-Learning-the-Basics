@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel full-width-panel">
+  <div class="panel-heading">
+    <h2>Season Calendar</h2>
+    <span>League + cup for the full year</span>
+  </div>
+  <div class="calendar-grid">
+    {% for week in calendar_weeks %}
+    <section class="week-card">
+      <h3>Week {{ week.week }}</h3>
+      {% for match in week.matches %}
+      <div class="compact-row">
+        <span>{{ match.stage_name }} · {{ match.home_short_name }} vs {{ match.away_short_name }}</span>
+        <span>{{ match.status }}</span>
+      </div>
+      {% endfor %}
+    </section>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
+

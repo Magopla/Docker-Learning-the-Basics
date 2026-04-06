@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel full-width-panel">
+  <div class="panel-heading">
+    <h2>Previous Results</h2>
+    <span>All completed weeks</span>
+  </div>
+  <div class="week-stack">
+    {% for week in result_weeks %}
+    <section class="week-card">
+      <h3>Week {{ week.week }}</h3>
+      {% for match in week.matches %}
+      <article class="result-line">
+        <div>
+          <strong>{{ match.stage_name }}</strong>
+          <p>{{ match.home_team }} {{ match.home_score }} - {{ match.away_score }} {{ match.away_team }}</p>
+        </div>
+        <span>{{ match.competition }}</span>
+      </article>
+      {% endfor %}
+    </section>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
+

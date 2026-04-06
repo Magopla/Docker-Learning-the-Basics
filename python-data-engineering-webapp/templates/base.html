@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ league.name }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Single League Simulator</p>
+          <h1>{{ league.name }}</h1>
+          <p class="subcopy">{{ league.country }} · Season {{ season.season }} · Week {{ season.current_week }}/{{ season.max_weeks }}</p>
+        </div>
+        <form action="/play-week" method="post" class="play-form">
+          <button type="submit" class="play-button">Play New Week</button>
+        </form>
+      </header>
+
+      <nav class="primary-nav">
+        <a href="/" class="{% if active_page == 'home' %}active{% endif %}">Dashboard</a>
+        <a href="/results" class="{% if active_page == 'results' %}active{% endif %}">Previous Results</a>
+        <a href="/calendar" class="{% if active_page == 'calendar' %}active{% endif %}">Season Calendar</a>
+        <a href="/cup" class="{% if active_page == 'cup' %}active{% endif %}">Cup Trophy</a>
+      </nav>
+
+      {% block content %}{% endblock %}
+    </div>
+  </body>
+</html>
+

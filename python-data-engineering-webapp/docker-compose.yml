@@ -14,7 +14,7 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - league_state_data:/var/lib/postgresql/data
 
   webapp:
     build: .
@@ -25,10 +25,10 @@ services:
     environment:
       APP_ENV: local
       APP_NAME: data-engineering-league-simulator
-      APP_VERSION: 0.2.0
+      APP_VERSION: 0.3.0
       DATABASE_URL: postgresql+psycopg://league_user:league_password@postgres:5432/league
     ports:
       - "8000:8000"
 
 volumes:
-  postgres_data:
+  league_state_data:

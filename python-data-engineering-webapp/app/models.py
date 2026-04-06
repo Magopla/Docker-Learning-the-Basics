@@ -17,17 +17,29 @@ class Team(Base):
     stadium: Mapped[str] = mapped_column(String(120))
 
 
+class SeasonState(Base):
+    __tablename__ = "season_state"
+
+    id: Mapped[int] = mapped_column(primary_key=True, default=1)
+    season: Mapped[str] = mapped_column(String(20))
+    current_week: Mapped[int] = mapped_column(Integer, default=0)
+    random_seed: Mapped[int] = mapped_column(Integer)
+
+
 class Match(Base):
     __tablename__ = "matches"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    matchday: Mapped[int] = mapped_column(Integer, index=True)
+    competition: Mapped[str] = mapped_column(String(20), index=True)
+    week_number: Mapped[int] = mapped_column(Integer, index=True)
+    stage_name: Mapped[str] = mapped_column(String(50), index=True)
     kickoff_date: Mapped[date] = mapped_column(Date, index=True)
     status: Mapped[str] = mapped_column(String(20), index=True)
     home_team_id: Mapped[int] = mapped_column(ForeignKey("teams.id"))
     away_team_id: Mapped[int] = mapped_column(ForeignKey("teams.id"))
     home_score: Mapped[int] = mapped_column(Integer, default=0)
     away_score: Mapped[int] = mapped_column(Integer, default=0)
+    notes: Mapped[str] = mapped_column(String(120), default="")
 
     home_team: Mapped[Team] = relationship(foreign_keys=[home_team_id])
     away_team: Mapped[Team] = relationship(foreign_keys=[away_team_id])

@@ -1,151 +1,130 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ league.name }}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700&family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="/static/styles.css" />
-  </head>
-  <body>
-    <div class="page-shell">
-      <header class="topbar">
-        <div>
-          <p class="eyebrow">Single League Demo</p>
-          <h1>{{ league.name }}</h1>
-          <p class="subcopy">{{ league.country }} · Season {{ league.season }}</p>
-        </div>
-        <div class="leader-card">
-          <span>Current leader</span>
-          <strong>{{ leader.team }}</strong>
-          <small>{{ leader.points }} pts · GD {{ leader.goal_difference }}</small>
-        </div>
-      </header>
+{% extends "base.html" %}
+{% block content %}
+<main class="layout">
+  <section class="main-column">
+    <section class="panel hero-panel">
+      <div class="panel-heading">
+        <h2>Latest Week</h2>
+        <span>{{ latest_results | length }} matches played</span>
+      </div>
+      <div class="score-list">
+        {% for match in latest_results %}
+        <article class="score-row">
+          <div class="match-meta">
+            <span>{{ match.stage_name }}</span>
+            <span>{{ match.competition | upper }}</span>
+          </div>
+          <div class="teams">
+            <div class="team-line"><span>{{ match.home_team }}</span><strong>{{ match.home_score }}</strong></div>
+            <div class="team-line"><span>{{ match.away_team }}</span><strong>{{ match.away_score }}</strong></div>
+          </div>
+          {% if match.notes %}
+          <small class="note">{{ match.notes }}</small>
+          {% endif %}
+        </article>
+        {% endfor %}
+      </div>
+    </section>
 
-      <main class="layout">
-        <section class="main-column">
-          <nav class="league-tabs" aria-label="League sections">
-            <a class="active" href="#results">Results</a>
-            <a href="#fixtures">Fixtures</a>
-            <a href="#table">Standings</a>
-            <a href="#scorers">Top Scorers</a>
-          </nav>
+    <section class="panel">
+      <div class="panel-heading">
+        <h2>Next Week</h2>
+        <span>{{ next_week_matches | length }} scheduled matches</span>
+      </div>
+      <div class="fixture-list">
+        {% for match in next_week_matches %}
+        <article class="fixture-row">
+          <div>
+            <strong>{{ match.stage_name }}</strong>
+            <p>{{ match.kickoff_date }}</p>
+          </div>
+          <div class="fixture-teams">
+            <span>{{ match.home_team }}</span>
+            <span class="vs">vs</span>
+            <span>{{ match.away_team }}</span>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
 
-          <section class="panel hero-panel" id="results">
-            <div class="panel-heading">
-              <h2>Latest Results</h2>
-              <span>{{ recent_results | length }} finished matches</span>
-            </div>
-            <div class="score-list">
-              {% for match in recent_results %}
-              <article class="score-row">
-                <div class="match-meta">
-                  <span>MD {{ match.matchday }}</span>
-                  <span>{{ match.kickoff_date }}</span>
-                </div>
-                <div class="teams">
-                  <div class="team-line">
-                    <span>{{ match.home_team }}</span>
-                    <strong>{{ match.home_score }}</strong>
-                  </div>
-                  <div class="team-line">
-                    <span>{{ match.away_team }}</span>
-                    <strong>{{ match.away_score }}</strong>
-                  </div>
-                </div>
-              </article>
-              {% endfor %}
-            </div>
-          </section>
-
-          <section class="panel" id="fixtures">
-            <div class="panel-heading">
-              <h2>Upcoming Fixtures</h2>
-              <span>Generated from the fake league API</span>
-            </div>
-            <div class="fixture-list">
-              {% for match in upcoming_fixtures %}
-              <article class="fixture-row">
-                <div>
-                  <strong>MD {{ match.matchday }}</strong>
-                  <p>{{ match.kickoff_date }}</p>
-                </div>
-                <div class="fixture-teams">
-                  <span>{{ match.home_team }}</span>
-                  <span class="vs">vs</span>
-                  <span>{{ match.away_team }}</span>
-                </div>
-              </article>
-              {% endfor %}
-            </div>
-          </section>
+    <section class="panel">
+      <div class="panel-heading">
+        <h2>Previous Results</h2>
+        <span>Last 4 weeks</span>
+      </div>
+      <div class="week-stack">
+        {% for week in previous_results %}
+        <section class="week-card">
+          <h3>Week {{ week.week }}</h3>
+          {% for match in week.matches %}
+          <div class="compact-row">
+            <span>{{ match.home_short_name }} {{ match.home_score }} - {{ match.away_score }} {{ match.away_short_name }}</span>
+            <span>{{ match.competition }}</span>
+          </div>
+          {% endfor %}
         </section>
+        {% endfor %}
+      </div>
+    </section>
+  </section>
 
-        <aside class="sidebar">
-          <section class="panel" id="table">
-            <div class="panel-heading">
-              <h2>Standings</h2>
-              <span>One league only</span>
-            </div>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Club</th>
-                    <th>P</th>
-                    <th>GD</th>
-                    <th>Pts</th>
-                    <th>Form</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for team in standings %}
-                  <tr>
-                    <td>{{ team.position }}</td>
-                    <td>{{ team.short_name }}</td>
-                    <td>{{ team.played }}</td>
-                    <td>{{ team.goal_difference }}</td>
-                    <td><strong>{{ team.points }}</strong></td>
-                    <td>
-                      <div class="form-strip">
-                        {% for result in team.form %}
-                        <span class="form-badge form-{{ result | lower }}">{{ result }}</span>
-                        {% endfor %}
-                      </div>
-                    </td>
-                  </tr>
+  <aside class="sidebar">
+    <section class="panel">
+      <div class="panel-heading">
+        <h2>Standings</h2>
+        <span>20 clubs · 38 matches max</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>#</th><th>Club</th><th>P</th><th>GD</th><th>Pts</th><th>Form</th></tr>
+          </thead>
+          <tbody>
+            {% for team in standings %}
+            <tr>
+              <td>{{ team.position }}</td>
+              <td>{{ team.short_name }}</td>
+              <td>{{ team.played }}</td>
+              <td>{{ team.goal_difference }}</td>
+              <td><strong>{{ team.points }}</strong></td>
+              <td>
+                <div class="form-strip">
+                  {% for result in team.form %}
+                  <span class="form-badge form-{{ result | lower }}">{{ result }}</span>
                   {% endfor %}
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          <section class="panel" id="scorers">
-            <div class="panel-heading">
-              <h2>Top Scorers</h2>
-              <span>Golden Boot race</span>
-            </div>
-            <ol class="scorers-list">
-              {% for scorer in top_scorers %}
-              <li>
-                <div>
-                  <strong>{{ scorer.player }}</strong>
-                  <span>{{ scorer.team }}</span>
                 </div>
-                <strong>{{ scorer.goals }}</strong>
-              </li>
-              {% endfor %}
-            </ol>
-          </section>
-        </aside>
-      </main>
-    </div>
-  </body>
-</html>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <h2>Top Scorers</h2>
+        <span>League only</span>
+      </div>
+      <ol class="scorers-list">
+        {% for scorer in top_scorers %}
+        <li><div><strong>{{ scorer.player }}</strong><span>{{ scorer.team }}</span></div><strong>{{ scorer.goals }}</strong></li>
+        {% endfor %}
+      </ol>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <h2>Cup Snapshot</h2>
+        <span>Elimination trophy</span>
+      </div>
+      <div class="cup-summary">
+        <p>Champion: <strong>{{ cup_overview.champion or "Still in play" }}</strong></p>
+        <p>Rounds scheduled every two weeks.</p>
+      </div>
+    </section>
+  </aside>
+</main>
+{% endblock %}
 
