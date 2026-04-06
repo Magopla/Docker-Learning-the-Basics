@@ -38,6 +38,15 @@ If you only open a few links, make them these:
 | [Hadolint](https://github.com/hadolint/hadolint) | Dockerfile linting |
 | [BuildKit](https://github.com/moby/buildkit) | Faster modern image builds |
 
+## Production and Security Reading
+
+| Resource | Focus |
+| --- | --- |
+| [Docker Engine security](https://docs.docker.com/engine/security/) | Security model and daemon considerations |
+| [Docker Compose file reference](https://docs.docker.com/compose/compose-file/) | Production-relevant Compose behavior and options |
+| [Portainer documentation](https://docs.portainer.io/) | Operating environments with Portainer |
+| [OWASP Docker Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Docker_Security_Cheat_Sheet.html) | Practical security reminders |
+
 ## Related Technologies
 
 | Technology | Why you may care later |

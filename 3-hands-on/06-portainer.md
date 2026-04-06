@@ -92,4 +92,4 @@ That is fine for local learning, but it is something to treat carefully in share
 
 ## Next Step
 
-Use [`../4-reference/commands-cheatsheet.md`](../4-reference/commands-cheatsheet.md) as your quick reference while repeating the exercises.
+Continue to [`../4-operations-and-production/02-portainer-operations.md`](../4-operations-and-production/02-portainer-operations.md) to learn how Portainer fits ongoing image and container management.

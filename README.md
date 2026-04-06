@@ -1,27 +1,30 @@
 # Docker Learning the Basics
 
-This repository is organized as a small self-paced course for learning Docker by reading a little, then running things locally.
+This repository is organized as a self-paced Docker course for beginners who want to move from first concepts to practical local stacks and production-minded habits.
 
-It is aimed at beginners, especially people in data and platform-adjacent roles who want enough Docker knowledge to:
+It is especially useful for people in data, analytics, and platform-adjacent roles who want to:
 
 - understand what containers are and why they exist
 - run and inspect containers from the CLI
-- work with ports, volumes, and environment variables
-- use Docker Compose for simple multi-container setups
-- build confidence before moving on to more advanced tools
-- finish with a small capstone that combines the basics
+- work with ports, volumes, networks, and environment variables
+- use Docker Compose for simple multi-container applications
+- understand how to think about production deployment and container security
+- manage images and containers visually with Portainer
+- see a realistic Data Engineering-flavored local stack
 
-## How To Use This Repo
+## Learning Path
 
 Follow the modules in order:
 
 | Module | Focus | Outcome |
 | --- | --- | --- |
 | `0-prerequisites` | Installation checks | Docker is installed and working |
-| `1-docker-concepts` | Core ideas | You understand images, containers, and architecture |
-| `2-setup` | Local environment | You verify your machine and optional tools |
-| `3-hands-on` | Guided practice | You run real commands and small labs |
-| `4-reference` | Quick lookup | You have a cheatsheet while practicing |
+| `1-docker-concepts` | Core ideas | You understand images, containers, tags, and architecture |
+| `2-setup` | Local environment | You verify Docker Desktop and optional Portainer |
+| `3-hands-on` | Guided practice | You learn the CLI and Compose through small labs |
+| `4-operations-and-production` | Production, Portainer operations, security | You develop better operational judgment |
+| `5-data-engineering-example` | Realistic local stack | You see how Docker fits a data workflow |
+| `6-reference` | Quick lookup | You have a cheatsheet and starter Compose template |
 | `resources` | External reading | You know where to go deeper |
 
 Recommended flow:
@@ -30,11 +33,13 @@ Recommended flow:
 2. Read [`1-docker-concepts/README.md`](./1-docker-concepts/README.md)
 3. Complete [`2-setup/README.md`](./2-setup/README.md)
 4. Work through [`3-hands-on/README.md`](./3-hands-on/README.md)
-5. Keep [`4-reference/commands-cheatsheet.md`](./4-reference/commands-cheatsheet.md) open while practicing
+5. Continue to [`4-operations-and-production/README.md`](./4-operations-and-production/README.md)
+6. Finish with [`5-data-engineering-example/README.md`](./5-data-engineering-example/README.md)
+7. Keep [`6-reference/commands-cheatsheet.md`](./6-reference/commands-cheatsheet.md) open while practicing
 
 ## Quick Start
 
-If Docker is already installed, you can start here:
+If Docker is already installed, start here:
 
 ```bash
 docker run hello-world
@@ -56,54 +61,43 @@ Docker Learning the Basics/
 ├── 1-docker-concepts/
 ├── 2-setup/
 ├── 3-hands-on/
-│   ├── 01-cli-essentials.md
-│   ├── 02-running-containers.md
-│   ├── 03-managing-containers.md
-│   ├── 04-networks-volumes.md
-│   ├── 05-docker-compose.md
-│   ├── 06-portainer.md
-│   └── labs/
-├── 4-reference/
+├── 4-operations-and-production/
+├── 5-data-engineering-example/
+├── 6-reference/
 └── resources/
 ```
 
 ## What Makes This Repo Useful For Learning
 
 - concepts are separated from practice
-- the hands-on section increases in difficulty gradually
-- the repository now includes small lab assets under `3-hands-on/labs`
-- the repository now includes quick self-checks and a capstone lab
-- each module is intended to answer one question clearly:
-  - what is Docker?
-  - how do I install it?
-  - how do I run containers?
-  - how do I work with multiple services?
+- the hands-on path increases in difficulty gradually
+- the repository includes small labs and a capstone
+- the operations module adds production, Portainer, and security thinking
+- the Data Engineering example grounds Docker in a realistic use case
 
 ## Learning Pattern
 
-The repository now follows a simple pattern in most sections:
+Most modules follow the same pattern:
 
 1. Read a short explanation.
 2. Try a focused exercise.
 3. Check your understanding with a mini quiz or checklist.
-4. Finish the hands-on module with a capstone lab.
+4. Apply the ideas in a bigger example.
 
-## Suggested Learning Routes
-
-Use one of these routes depending on your goal:
+## Suggested Routes
 
 | Goal | Path |
 | --- | --- |
-| Learn Docker properly from scratch | `0 → 1 → 2 → 3` |
+| Learn Docker properly from scratch | `0 → 1 → 2 → 3 → 4 → 5` |
 | Just get hands-on quickly | `2 → 3` |
-| Refresh before an interview or project | `1 → 4` |
-| Learn Docker Compose specifically | `1.2 → 3.4 → 3.5` |
+| Learn production-minded Docker basics | `1 → 3 → 4` |
+| Learn from a data example | `1 → 3.5 → 5` |
 
 ## Notes
 
-- Commands assume Docker Desktop or a local Docker Engine is already running.
+- Commands assume Docker Desktop or a local Docker Engine is running.
 - Some examples use `open http://localhost:...`, which is most convenient on macOS.
-- Portainer is optional. The CLI exercises are the primary learning path.
+- Portainer is optional, but it becomes more useful in the operations module.
 
 ## Next Step
 
