@@ -38,4 +38,4 @@ This module is here to help you avoid common beginner mistakes such as:
 
 ## Next Step
 
-Start with [`01-production-deployment.md`](./01-production-deployment.md).
+Start with [`01-production-deployment.md`](./01-production-deployment.md), then continue to the CI/CD module in [`../5-cicd-and-environments/README.md`](../5-cicd-and-environments/README.md).

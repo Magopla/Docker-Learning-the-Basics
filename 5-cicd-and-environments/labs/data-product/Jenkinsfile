@@ -1,0 +1,60 @@
+pipeline {
+  agent any
+
+  environment {
+    IMAGE_REPOSITORY = "local/data-product"
+    BUILD_TAG_VERSION = "${env.BUILD_NUMBER}"
+    DEV_TAG = "dev-${env.BUILD_NUMBER}"
+    PROD_TAG = "prod-${env.BUILD_NUMBER}"
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Build Image') {
+      steps {
+        sh 'docker build -t ${IMAGE_REPOSITORY}:${BUILD_TAG_VERSION} .'
+      }
+    }
+
+    stage('Run Tests') {
+      steps {
+        sh 'docker run --rm ${IMAGE_REPOSITORY}:${BUILD_TAG_VERSION} pytest'
+      }
+    }
+
+    stage('Tag For Dev') {
+      steps {
+        sh 'docker tag ${IMAGE_REPOSITORY}:${BUILD_TAG_VERSION} ${IMAGE_REPOSITORY}:${DEV_TAG}'
+      }
+    }
+
+    stage('Deploy To Dev') {
+      steps {
+        sh 'IMAGE_REPOSITORY=${IMAGE_REPOSITORY} IMAGE_TAG=${DEV_TAG} PRODUCT_VERSION=${DEV_TAG} docker compose --env-file .env.dev.example -f compose.dev.yml up -d'
+      }
+    }
+
+    stage('Approve Production Release') {
+      steps {
+        input message: 'Promote this data product image to production?', ok: 'Deploy'
+      }
+    }
+
+    stage('Tag For Production') {
+      steps {
+        sh 'docker tag ${IMAGE_REPOSITORY}:${BUILD_TAG_VERSION} ${IMAGE_REPOSITORY}:${PROD_TAG}'
+      }
+    }
+
+    stage('Deploy To Production') {
+      steps {
+        sh 'IMAGE_REPOSITORY=${IMAGE_REPOSITORY} IMAGE_TAG=${PROD_TAG} PRODUCT_VERSION=${PROD_TAG} docker compose --env-file .env.prod.example -f compose.prod.yml up -d'
+      }
+    }
+  }
+}

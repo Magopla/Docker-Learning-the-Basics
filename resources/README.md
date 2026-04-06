@@ -47,6 +47,15 @@ If you only open a few links, make them these:
 | [Portainer documentation](https://docs.portainer.io/) | Operating environments with Portainer |
 | [OWASP Docker Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Docker_Security_Cheat_Sheet.html) | Practical security reminders |
 
+## CI/CD and Automation Reading
+
+| Resource | Focus |
+| --- | --- |
+| [Jenkins Documentation](https://www.jenkins.io/doc/) | Pipelines, agents, and automation basics |
+| [Jenkins Pipeline Syntax](https://www.jenkins.io/doc/book/pipeline/syntax/) | Declarative pipeline reference |
+| [Docker Pipeline plugin](https://plugins.jenkins.io/docker-workflow/) | Jenkins integration with Docker builds and containers |
+| [GitHub Actions documentation](https://docs.github.com/actions) | Alternative CI/CD platform if you do not use Jenkins |
+
 ## Related Technologies
 
 | Technology | Why you may care later |

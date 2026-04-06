@@ -1,4 +1,4 @@
-# Module 5: Data Engineering Example
+# Module 6: Data Engineering Example
 
 This module shows how Docker can support a realistic local setup for data work without becoming an overly large platform project.
 
@@ -32,7 +32,7 @@ This module gives you a more relevant example:
 ## Lab Location
 
 ```text
-5-data-engineering-example/labs/local-data-platform/
+6-data-engineering-example/labs/local-data-platform/
 ├── .env.example
 └── compose.yml
 ```

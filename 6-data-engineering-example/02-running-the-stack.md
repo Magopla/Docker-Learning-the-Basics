@@ -5,7 +5,7 @@ This section walks through the local data platform example.
 ## Lab Location
 
 ```text
-5-data-engineering-example/labs/local-data-platform/
+6-data-engineering-example/labs/local-data-platform/
 ├── .env.example
 └── compose.yml
 ```
@@ -13,7 +13,7 @@ This section walks through the local data platform example.
 ## Step 1: Prepare The Environment
 
 ```bash
-cd 5-data-engineering-example/labs/local-data-platform
+cd 6-data-engineering-example/labs/local-data-platform
 cp .env.example .env
 docker compose -f compose.yml config
 ```
@@ -116,4 +116,4 @@ docker compose -f compose.yml down -v
 
 ## Next Step
 
-Continue to [`../6-reference/commands-cheatsheet.md`](../6-reference/commands-cheatsheet.md) for quick command review.
+Continue to [`../7-reference/commands-cheatsheet.md`](../7-reference/commands-cheatsheet.md) for quick command review.

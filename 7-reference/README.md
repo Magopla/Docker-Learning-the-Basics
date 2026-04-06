@@ -23,6 +23,8 @@ Open this section when you need to:
 - Setup walkthrough: [`../2-setup/README.md`](../2-setup/README.md)
 - Hands-on exercises: [`../3-hands-on/README.md`](../3-hands-on/README.md)
 - Operations module: [`../4-operations-and-production/README.md`](../4-operations-and-production/README.md)
+- CI/CD module: [`../5-cicd-and-environments/README.md`](../5-cicd-and-environments/README.md)
+- Data example: [`../6-data-engineering-example/README.md`](../6-data-engineering-example/README.md)
 - Extra reading: [`../resources/README.md`](../resources/README.md)
 
 ## Next Step

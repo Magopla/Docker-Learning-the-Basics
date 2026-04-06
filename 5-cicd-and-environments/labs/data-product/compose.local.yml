@@ -1,0 +1,14 @@
+services:
+  data-product-api:
+    build:
+      context: .
+    environment:
+      APP_ENV: ${APP_ENV:-local}
+      PRODUCT_NAME: ${PRODUCT_NAME:-pipeline-metrics-api}
+      PRODUCT_VERSION: ${PRODUCT_VERSION:-local-dev}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app/app
+      - ./tests:/app/tests
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload

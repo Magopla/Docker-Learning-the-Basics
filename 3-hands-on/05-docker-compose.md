@@ -158,4 +158,4 @@ Try these small changes one at a time:
 
 ## Next Step
 
-Continue to [`06-portainer.md`](./06-portainer.md) if you want a GUI, or return to [`../6-reference/commands-cheatsheet.md`](../6-reference/commands-cheatsheet.md) for quick command review.
+Continue to [`06-portainer.md`](./06-portainer.md) if you want a GUI, or return to [`../7-reference/commands-cheatsheet.md`](../7-reference/commands-cheatsheet.md) for quick command review.

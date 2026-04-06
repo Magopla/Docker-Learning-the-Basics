@@ -1,0 +1,15 @@
+services:
+  data-product-api:
+    image: ${IMAGE_REPOSITORY:-local/data-product}:${IMAGE_TAG:-prod-latest}
+    restart: unless-stopped
+    environment:
+      APP_ENV: ${APP_ENV:-production}
+      PRODUCT_NAME: ${PRODUCT_NAME:-pipeline-metrics-api}
+      PRODUCT_VERSION: ${PRODUCT_VERSION:-prod-latest}
+    ports:
+      - "8200:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "from urllib.request import urlopen; urlopen('http://localhost:8000/health').read()"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
