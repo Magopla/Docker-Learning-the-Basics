@@ -1,0 +1,47 @@
+pipeline {
+  agent any
+
+  environment {
+    IMAGE_NAME = "data-engineering-league-simulator"
+    IMAGE_TAG = "${env.BUILD_NUMBER}"
+    LOCAL_IMAGE = "${IMAGE_NAME}:${IMAGE_TAG}"
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Build Image') {
+      steps {
+        sh 'docker build -t ${LOCAL_IMAGE} .'
+      }
+    }
+
+    stage('Run Tests') {
+      steps {
+        sh 'docker run --rm ${LOCAL_IMAGE} pytest'
+      }
+    }
+
+    stage('Package For Local Deployment') {
+      steps {
+        sh 'docker tag ${LOCAL_IMAGE} ${IMAGE_NAME}:latest'
+      }
+    }
+
+    stage('Deploy Locally') {
+      steps {
+        sh 'docker compose up -d'
+      }
+    }
+  }
+
+  post {
+    failure {
+      sh 'docker compose down || true'
+    }
+  }
+}
