@@ -50,6 +50,19 @@ A simple sprint flow for this example looks like this:
 
 That promotion idea is the key lesson: Docker helps you move the same built artifact through environments instead of rebuilding it differently each time.
 
+## Delivery Flow Diagram
+
+```mermaid
+flowchart LR
+  A["Developer laptop\ncompose.local.yml"] --> B["Git push / PR"]
+  B --> C["Jenkins pipeline"]
+  C --> D["Build image"]
+  D --> E["Run tests"]
+  E --> F["Deploy same image to Dev\ncompose.dev.yml"]
+  F --> G["Validation / sprint review"]
+  G --> H["Promote same image to Prod\ncompose.prod.yml"]
+```
+
 ## Next Step
 
 Start with [`01-docker-for-cicd.md`](./01-docker-for-cicd.md).

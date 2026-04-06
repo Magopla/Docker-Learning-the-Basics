@@ -51,6 +51,17 @@ As you work through the stack, pay attention to:
 - which service names become hostnames on the network
 - which values belong in `.env`
 
+## Architecture Diagram
+
+```mermaid
+flowchart LR
+  U["Developer / Analyst"] --> N["Notebook"]
+  U --> A["Adminer"]
+  N --> P["PostgreSQL"]
+  N --> M["MinIO"]
+  A --> P
+```
+
 ## Next Step
 
 Continue to [`02-running-the-stack.md`](./02-running-the-stack.md).

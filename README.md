@@ -40,6 +40,19 @@ Recommended flow:
 7. Finish with [`6-data-engineering-example/README.md`](./6-data-engineering-example/README.md)
 8. Keep [`7-reference/commands-cheatsheet.md`](./7-reference/commands-cheatsheet.md) open while practicing
 
+## Course Flow
+
+```mermaid
+flowchart LR
+  A["0. Prerequisites"] --> B["1. Concepts"]
+  B --> C["2. Setup"]
+  C --> D["3. Hands-On"]
+  D --> E["4. Operations & Production"]
+  E --> F["5. CI/CD & Environments"]
+  F --> G["6. Data Engineering Example"]
+  G --> H["7. Reference"]
+```
+
 ## Quick Start
 
 If Docker is already installed, start here:
@@ -82,6 +95,16 @@ The repository now includes several different ways to use Docker:
 | `3-hands-on/labs/07-capstone-stack` | Combine core Docker ideas in one small stack |
 | `5-cicd-and-environments/labs/data-product` | Learn local dev, CI/CD, and promotion to dev and production |
 | `6-data-engineering-example/labs/local-data-platform` | Learn a realistic local data platform layout |
+
+## Ways To Use This Repo
+
+You can use this repository in more than one way:
+
+- as a step-by-step beginner course
+- as a Docker onboarding guide for new team members
+- as a template source for local lab environments
+- as a discussion aid for dev vs prod environment design
+- as a starting point for a small data-product CI/CD demo
 
 ## What Makes This Repo Useful For Learning
 

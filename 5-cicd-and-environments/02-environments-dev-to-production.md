@@ -73,6 +73,14 @@ That is why this module includes:
 
 Each file is for a different stage in the product lifecycle.
 
+## Environment Comparison
+
+```mermaid
+flowchart TD
+  L["Local\nsource mounted\nfast iteration\nport 8000"] --> D["Dev\nbuilt image\nshared validation\nport 8100"]
+  D --> P["Production\npromoted image\nstable release\nport 8200"]
+```
+
 ## Mini Quiz
 
 1. Why are bind mounts more common in local development than in production?

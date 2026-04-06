@@ -65,6 +65,18 @@ Look for the differences compared with local:
 - restart policy
 - no bind mount for source code
 
+## Dev To Prod Promotion Mental Model
+
+```mermaid
+flowchart LR
+  A["docker build local/data-product:123"] --> B["Tests pass"]
+  B --> C["Tag as dev-123"]
+  C --> D["Deploy to dev"]
+  D --> E["Approve"]
+  E --> F["Tag as prod-123"]
+  F --> G["Deploy to production"]
+```
+
 ## Step 4: Read The Jenkinsfile
 
 Open `Jenkinsfile` and connect it to the environment files:

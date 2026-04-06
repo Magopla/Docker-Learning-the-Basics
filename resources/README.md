@@ -21,6 +21,18 @@ If you only open a few links, make them these:
 | [Docker Curriculum](https://docker-curriculum.com/) | Guided beginner tutorial |
 | [Docker Labs](https://github.com/docker/labs) | Official workshop material |
 
+## Official Samples and Real-Case Example Sources
+
+These are especially useful when you want to see real repository layouts instead of only reading docs.
+
+| Resource | Why it is useful |
+| --- | --- |
+| [Docker Samples overview](https://docs.docker.com/en/latest/examples/) | Official Docker examples across frameworks, databases, and platforms |
+| [Docker Samples on GitHub](https://github.com/dockersamples) | Official sample repositories you can inspect directly |
+| [Awesome Compose](https://github.com/docker/awesome-compose) | Curated Compose examples for many stack shapes |
+| [Example Voting App](https://github.com/dockersamples/example-voting-app) | A classic multi-container example from Docker samples |
+| [Docker Official Images](https://github.com/docker-library/official-images) | Source of truth for official image packaging references |
+
 ## Videos
 
 | Resource | Focus |
@@ -54,7 +66,18 @@ If you only open a few links, make them these:
 | [Jenkins Documentation](https://www.jenkins.io/doc/) | Pipelines, agents, and automation basics |
 | [Jenkins Pipeline Syntax](https://www.jenkins.io/doc/book/pipeline/syntax/) | Declarative pipeline reference |
 | [Docker Pipeline plugin](https://plugins.jenkins.io/docker-workflow/) | Jenkins integration with Docker builds and containers |
+| [Using Docker with Pipeline](https://www.jenkins.io/doc/book/pipeline/docker/) | Official Jenkins guide to Docker in pipelines |
 | [GitHub Actions documentation](https://docs.github.com/actions) | Alternative CI/CD platform if you do not use Jenkins |
+
+## Real-Case Learning Paths
+
+If you want to keep exploring after this repository, a strong progression is:
+
+1. Recreate a Docker sample locally.
+2. Convert it into separate local, dev, and prod Compose files.
+3. Add a pipeline file such as a `Jenkinsfile`.
+4. Replace `latest` tags with explicit versions.
+5. Add healthchecks, restart policies, and a small security review.
 
 ## Related Technologies
 

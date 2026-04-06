@@ -41,6 +41,19 @@ In a more realistic team workflow, you would usually:
 - have dev and prod hosts pull that tagged image
 - keep environment-specific secrets out of the repository
 
+## Pipeline Diagram
+
+```mermaid
+flowchart LR
+  A["Checkout"] --> B["docker build"]
+  B --> C["pytest in container"]
+  C --> D["Tag image for dev"]
+  D --> E["Deploy to dev"]
+  E --> F["Manual approval"]
+  F --> G["Tag image for prod"]
+  G --> H["Deploy to prod"]
+```
+
 ## Mini Quiz
 
 1. Why is it helpful to run tests against the built image instead of only against local source files?
